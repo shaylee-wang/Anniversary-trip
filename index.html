@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anniversary Trip to Florida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf8f4; --card:#fff; --ink:#123a42; --ink2:#4b6368; --mute:#8a9a9d;
+  --teal:#0f7b6c; --teal-soft:#e0f1ed; --coral:#e8805a; --coral-soft:#fbe9e0;
+  --sand:#f4e6dc; --line:#ece6dc; --warn:#fff4d6; --warn-ink:#8a5a00;
+  --shadow:0 6px 24px rgba(18,58,66,.08);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:0 18px 80px}
+a{color:var(--teal)}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+
+/* hero */
+.hero{margin:0 -18px;padding:44px 24px 70px;background:
+  radial-gradient(900px 300px at 85% -10%,#f9d9c6 0,transparent 60%),
+  radial-gradient(700px 300px at -10% 20%,#d7efe6 0,transparent 60%),#f6efe6;position:relative}
+.eyebrow{font-size:12px;letter-spacing:.22em;color:var(--teal);font-weight:700;text-transform:uppercase}
+.hero h1{margin:10px 0 8px;font-size:clamp(20px,6.3vw,40px);line-height:1.15;letter-spacing:-.01em;white-space:nowrap;font-family:'Playfair Display',Georgia,'Songti SC',serif;font-weight:700}
+.hero h1 em{font-style:italic;font-weight:500;color:var(--coral)}
+.hero p.cn{margin-top:4px;font-size:12px;letter-spacing:.08em;color:var(--mute)}
+h2{font-family:'Playfair Display',Georgia,'Songti SC',serif}
+.hero p{margin:0;color:var(--ink2);font-size:14px;letter-spacing:.02em}
+.pill{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;border-radius:999px;padding:10px 18px;font-weight:700;font-size:15px;margin-top:20px;box-shadow:0 8px 20px rgba(18,58,66,.25)}
+.pill .dot{width:8px;height:8px;border-radius:50%;background:#7be0c6;animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(123,224,198,.7)}100%{box-shadow:0 0 0 10px rgba(123,224,198,0)}}
+
+/* tabs */
+.tabs{position:sticky;top:0;z-index:20;margin:-34px -18px 0;padding:0 18px;background:rgba(250,248,244,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:15px 12px 12px;font-weight:700;font-size:15px;color:var(--mute);position:relative;white-space:nowrap}
+.tab.on{color:var(--ink)}
+.tab.on::after{content:"";position:absolute;left:12px;right:12px;bottom:0;height:3px;border-radius:3px;background:var(--coral)}
+.view{display:none;animation:fade .35s ease}
+.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+h2{font-size:22px;margin:34px 0 14px}
+h2 small{display:block;font-size:11px;letter-spacing:.2em;color:var(--teal);margin-bottom:2px}
+.card{background:var(--card);border-radius:22px;padding:18px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.row{display:flex;gap:12px;align-items:center}
+.muted{color:var(--ink2);font-size:13px}
+
+/* route chips */
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 6px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:9px 16px;border-radius:999px;background:var(--sand);font-weight:600;font-size:14px;transition:.2s}
+.chip.arrow::before{content:"→ ";color:var(--coral)}
+.chip:active{transform:scale(.95)}
+.chip.on{background:var(--ink);color:#fff}
+
+/* flight */
+.flight .top{display:flex;justify-content:space-between;align-items:flex-start}
+.flight .no{font-size:24px;font-weight:800}
+.badge{display:inline-block;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:700}
+.b-booked{background:var(--teal-soft);color:var(--teal)}
+.b-todo{background:var(--coral-soft);color:#c4552d}
+.b-info{background:#eef1f3;color:var(--ink2)}
+.route{display:flex;align-items:center;gap:10px;margin:18px 0 6px}
+.route b{font-size:26px}
+.route .line{flex:1;height:2px;background:linear-gradient(90deg,var(--line),var(--teal),var(--line));position:relative}
+.route .line::after{content:"✈";position:absolute;left:50%;top:50%;transform:translate(-50%,-52%);background:#fff;padding:0 6px;color:var(--teal);font-size:15px}
+.times{display:flex;justify-content:space-between;font-weight:700;font-size:20px}
+.times span.s{font-size:12px;color:var(--mute);font-weight:500;align-self:center}
+
+/* alert */
+.alert{background:linear-gradient(135deg,#fff4d6,#ffe6cf);border:1px solid #f2d9a8;border-radius:22px;padding:18px}
+.alert h3{margin:0 0 6px;font-size:16px;color:var(--warn-ink)}
+.alert p{margin:6px 0;font-size:14px}
+.mini{display:inline-block;background:var(--warn-ink);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:700;margin-top:6px}
+
+/* stays */
+.stay{display:flex;gap:14px;padding:16px 0;border-top:1px solid var(--line);cursor:pointer}
+.stay:first-child{border-top:0;padding-top:0}
+.stay .d{flex:none;width:58px;text-align:center;background:var(--sand);border-radius:14px;padding:8px 0;font-weight:800;font-size:13px;line-height:1.3}
+.stay h4{margin:0;font-size:16px}
+.stay .more{display:none;margin-top:8px;font-size:13px;color:var(--ink2)}
+.stay.open .more{display:block}
+.copyb{margin-top:8px;display:inline-block;padding:6px 12px;border-radius:999px;background:var(--teal-soft);color:var(--teal);font-size:12px;font-weight:700}
+
+/* map */
+.mapbox{background:#c6e2f0;border-radius:22px;overflow:hidden;position:relative;border:1px solid var(--line)}
+.mapbox svg{display:block;width:100%;height:auto}
+.mapbox{aspect-ratio:340/283}
+.land{fill:#f4f3ee}
+.urban{fill:#e9e7e0}
+.park{fill:#d6ebc8}
+.lake{fill:#c6e2f0}
+.rdm{fill:none;stroke:#fff;stroke-width:1px;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-linejoin:round}
+.rcase{fill:none;stroke:#d8d5cc;stroke-width:3.4px;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-linejoin:round}
+.rd{fill:none;stroke:#fff;stroke-width:2.1px;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-linejoin:round}
+.cdot{fill:#fff;stroke:#5f6368;stroke-width:1.5px;vector-effect:non-scaling-stroke}
+.clab{fill:#5f6368;paint-order:stroke;stroke:#f4f3ee;stroke-linejoin:round}
+.attr{position:absolute;left:10px;bottom:6px;font-size:10px;color:#6b7a7d;background:rgba(255,255,255,.7);padding:1px 7px;border-radius:999px;pointer-events:none}
+.pin .halo{fill:#fff;stroke:none;opacity:.9}
+.pin.tpa circle:not(.halo){fill:var(--ink);stroke:var(--ink)}
+.pin .ap{fill:#fff;pointer-events:none}
+.zoom{position:absolute;right:10px;top:10px;z-index:3;display:flex;flex-direction:column;gap:6px}
+.zoom button{width:36px;height:36px;border-radius:12px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.15);font-weight:800;font-size:18px;line-height:1}
+.zoom button:active{background:var(--sand)}
+.sv{touch-action:pan-y}
+.mapbox{cursor:grab;user-select:none;-webkit-user-select:none}
+.pin{cursor:pointer}
+.pin circle:not(.halo){fill:#fff;stroke:var(--ink);stroke-width:2.5px;vector-effect:non-scaling-stroke;transition:fill .25s}
+.pin.on circle:not(.halo){fill:var(--coral);stroke:var(--coral)}
+.pin text.pl{font-weight:800;fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-linejoin:round}
+.rt{fill:none;stroke:var(--coral);stroke-width:3.5px;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-dasharray:6 7;animation:dash 1.2s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-26}}
+.mapcap{position:absolute;left:12px;top:10px;background:rgba(255,255,255,.88);border-radius:999px;padding:5px 12px;font-size:12px;font-weight:700}
+
+/* drives */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.drive{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;font-size:13px}
+.drive b{display:block;font-size:20px;color:var(--teal)}
+
+/* days */
+.dayscroll{display:flex;gap:8px;overflow-x:auto;padding:6px 18px 10px;margin:0 -18px;scroll-snap-type:x proximity;scrollbar-width:none}
+.dayscroll::-webkit-scrollbar{display:none}
+.dp{flex:none;scroll-snap-align:center;width:62px;padding:10px 0;border-radius:18px;background:var(--card);border:1px solid var(--line);text-align:center;transition:.2s;position:relative}
+.dp .w{font-size:11px;color:var(--mute);font-weight:600}
+.dp .n{font-size:17px;font-weight:800}
+.dp .m{font-size:10px;color:var(--mute)}
+.dp.on{background:var(--ink);color:#fff;border-color:var(--ink);transform:translateY(-2px)}
+.dp.on .w,.dp.on .m{color:#a9c4c8}
+.dp.today::after{content:"今天";position:absolute;top:-7px;left:50%;transform:translateX(-50%);background:var(--coral);color:#fff;font-size:10px;padding:1px 7px;border-radius:999px}
+.dayhead{margin:14px 0 6px}
+.dayhead .k{font-size:12px;letter-spacing:.15em;color:var(--teal);font-weight:700}
+.dayhead h3{margin:2px 0 6px;font-size:22px}
+.tag-stay{display:inline-block;background:var(--sand);padding:4px 12px;border-radius:999px;font-size:12px;font-weight:600}
+.note{background:var(--teal-soft);border-radius:16px;padding:12px 14px;font-size:13px;margin:14px 0;color:#0b5a4f}
+.note.warn{background:var(--warn);color:var(--warn-ink)}
+.tl{position:relative;margin:10px 0 0;padding-left:0}
+.it{display:flex;gap:12px;padding:0 0 0 0;cursor:pointer}
+.it .t{flex:none;width:68px;text-align:right;font-weight:800;font-size:13px;padding-top:15px;color:var(--ink)}
+.it .t small{display:block;font-weight:500;color:var(--mute);font-size:11px}
+.it .rail{flex:none;width:18px;position:relative}
+.it .rail::before{content:"";position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--line)}
+.it:first-child .rail::before{top:22px}
+.it:last-child .rail::before{bottom:calc(100% - 22px)}
+.it .rail i{position:absolute;left:3px;top:17px;width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid var(--teal)}
+.it.booked .rail i{background:var(--teal)}
+.it.todo .rail i{border-color:var(--coral)}
+.it .body{flex:1;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px 14px;margin:6px 0;transition:.2s}
+.it:active .body{transform:scale(.99)}
+.it .ttl{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;font-weight:700;font-size:15px}
+.it .ttl .badge{flex:none;font-size:11px;padding:3px 9px}
+.it .desc{display:none;margin-top:8px;font-size:13px;color:var(--ink2)}
+.it.open .desc{display:block}
+.it.open .body{border-color:var(--teal);box-shadow:0 6px 20px rgba(15,123,108,.12)}
+.it .links{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
+.it .links a,.it .links button{font-size:12px;font-weight:700;padding:6px 12px;border-radius:999px;background:var(--teal-soft);color:var(--teal);text-decoration:none}
+.chev{color:var(--mute);font-size:12px;margin-left:4px;transition:.2s;display:inline-block}
+.it.open .chev{transform:rotate(180deg)}
+.nav2{display:flex;justify-content:space-between;gap:10px;margin-top:22px}
+.nav2 button{flex:1;padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-weight:700}
+.nav2 button:active{background:var(--sand)}
+.nav2 button[disabled]{opacity:.35}
+.expall{float:right;font-size:12px;color:var(--teal);font-weight:700;margin-top:6px}
+
+/* tickets */
+.filters{display:flex;gap:8px;margin-bottom:14px}
+.tk{margin-bottom:12px;position:relative;overflow:hidden}
+.tk::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--teal)}
+.tk.todo::before{background:var(--coral)}
+.tk.info::before{background:var(--mute)}
+.tk .h{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding-left:6px}
+.tk h4{margin:0;font-size:16px}
+.tk .dt{font-size:12px;color:var(--mute);margin-top:2px;font-weight:600}
+.tk p{margin:8px 0 0 6px;font-size:13px;color:var(--ink2)}
+.tk .price{font-weight:800;margin-left:6px;margin-top:8px;font-size:14px}
+
+/* budget */
+.total{background:var(--ink);color:#fff;border-radius:24px;padding:22px;text-align:center}
+.total .big{font-size:36px;font-weight:800;margin:4px 0}
+.total .s{font-size:12px;color:#a9c4c8}
+.bar{height:8px;border-radius:8px;background:rgba(255,255,255,.18);margin-top:14px;overflow:hidden}
+.bar i{display:block;height:100%;background:#7be0c6;border-radius:8px;transition:width .4s}
+.seg{display:inline-flex;background:var(--sand);border-radius:999px;padding:4px;margin-top:10px}
+.seg button{padding:7px 14px;border-radius:999px;font-weight:700;font-size:13px}
+.seg button.on{background:var(--ink);color:#fff}
+.bi{display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--line)}
+.bi:first-child{border-top:0}
+.sw{flex:none;width:44px;height:26px;border-radius:26px;background:#d9d4c9;position:relative;transition:.25s}
+.sw::after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.25s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.bi.on .sw{background:var(--teal)}
+.bi.on .sw::after{left:21px}
+.bi .nm{flex:1;min-width:0}
+.bi .nm b{display:block;font-size:15px}
+.bi .nm span{font-size:12px;color:var(--mute)}
+.bi .amt{font-weight:800;font-size:15px;white-space:nowrap}
+.bi:not(.on) .amt,.bi:not(.on) .nm b{opacity:.4;text-decoration:line-through}
+.tbd li{margin:6px 0}
+
+/* checklist */
+.prog{display:flex;align-items:center;gap:14px}
+.ring{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:conic-gradient(var(--teal) var(--p,0%),var(--line) 0)}
+.ring span{width:50px;height:50px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:15px}
+.ck{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-top:1px solid var(--line);cursor:pointer}
+.ck:first-child{border-top:0}
+.box{flex:none;width:24px;height:24px;border-radius:8px;border:2px solid #cfc8ba;display:grid;place-items:center;color:#fff;font-size:14px;margin-top:1px;transition:.2s}
+.ck.done .box{background:var(--teal);border-color:var(--teal)}
+.ck.done .tx{color:var(--mute);text-decoration:line-through}
+.ck .tx b{display:block;font-size:15px}
+.ck .tx span{font-size:12px;color:var(--mute)}
+.seglink{display:flex;gap:10px;align-items:center;padding:12px 0;border-top:1px solid var(--line);text-decoration:none;color:var(--ink);font-size:14px;font-weight:600}
+.seglink:first-of-type{border-top:0}
+.seglink i{flex:none;width:24px;height:24px;border-radius:50%;background:var(--teal);color:#fff;font-style:normal;font-size:12px;display:grid;place-items:center}
+.foot{margin-top:40px;text-align:center;font-size:12px;color:var(--mute)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,30px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-size:13px;font-weight:700;opacity:0;transition:.3s;pointer-events:none;z-index:50}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Happy Anniversary ♡ 2026</div>
+    <h1>Anniversary Trip <em>to Florida</em></h1>
+    <p>Dec 24 – Jan 1 · 8 nights · Orlando, Clearwater, Tampa</p>
+    <p class="cn">圣诞纪念日之旅 · 奥兰多 / 清水湾 / 坦帕</p>
+    <div class="pill"><span class="dot"></span><span id="cd">计算中…</span></div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab on" data-v="overview">Overview</button>
+    <button class="tab" data-v="plan">Itinerary</button>
+    <button class="tab" data-v="tickets">Tickets</button>
+    <button class="tab" data-v="budget">Budget</button>
+    <button class="tab" data-v="list">Checklist</button>
+  </nav>
+
+  <!-- OVERVIEW -->
+  <section class="view on" id="v-overview">
+    <h2><small>TRIP OVERVIEW · 旅程总览</small>The Journey</h2>
+    <div class="chips" id="routeChips"></div>
+
+    <div style="margin-top:16px" class="mapbox" id="mapOv"></div>
+    <div class="muted" style="margin:8px 4px 0">底图是公开地理数据（Natural Earth）：海岸线、公路、湖泊、城市。可拖动，右上角按钮缩放，放大后显示更多城市。点城市跳到对应那天。</div>
+
+    <h2><small>MUST DO FIRST · 最要紧</small>Before We Go</h2>
+    <div class="alert">
+      <h3>抢 EPCOT 的 Lightning Lane Premier Pass</h3>
+      <p>EVEN 不是迪士尼自营酒店，购买窗口是提前 3 天。<b>12 月 23 日 07:00（美东）</b>在 My Disney Experience App 开售 12 月 26 日的票。</p>
+      <p>EPCOT 门票已经买了，记得先关联到 App 账号，没有关联买不了 Pass。价格浮动，EPCOT 近期最高到过每人 269 美元加税，圣诞周大概率在高位。</p>
+      <p>提醒：12/22 21:00 先定闹钟，12/23 06:50 起床抢票。</p>
+      <span class="mini" id="cdLL">计算中…</span>
+    </div>
+
+    <h2><small>FLIGHT CENTER · 航班</small>Flights</h2>
+    <div class="card flight" style="margin-bottom:12px">
+      <div class="top"><div><div class="no">WN3614</div><div class="muted">Southwest Airlines · Economy · 直飞 2h25m</div></div><span class="badge b-booked">已订</span></div>
+      <div class="route"><b>PIT</b><div class="line"></div><b>TPA</b></div>
+      <div class="muted" style="display:flex;justify-content:space-between"><span>匹兹堡</span><span>坦帕</span></div>
+      <div class="times" style="margin-top:6px"><span>12:30</span><span class="s">2026-12-24 · 当地时间</span><span>14:55</span></div>
+    </div>
+    <div class="card flight">
+      <div class="top"><div><div class="no">WN4277</div><div class="muted">Southwest Airlines · 直飞</div></div><span class="badge b-booked">已订</span></div>
+      <div class="route"><b>TPA</b><div class="line"></div><b>PIT</b></div>
+      <div class="muted" style="display:flex;justify-content:space-between"><span>坦帕</span><span>匹兹堡</span></div>
+      <div class="times" style="margin-top:6px"><span>19:30</span><span class="s">2027-01-01</span><span>约 22:00</span></div>
+      <p class="muted" style="margin:12px 0 0">已购票，时间以实际出票为准。建议 17:30 前到机场。</p>
+    </div>
+
+    <h2><small>WHERE TO STAY · 住宿</small>Stays</h2>
+    <div class="card" id="stays"></div>
+
+    <h2><small>DRIVE TIMES · 车程</small>On the Road</h2>
+    <div class="grid2" id="drives"></div>
+    <div class="note warn" style="margin-top:14px">圣诞周堵车普遍，每段多留半小时。三段行程全靠开车。</div>
+
+    <h2><small>WEATHER · 天气</small>What to Wear</h2>
+    <div class="card">
+      <div class="row"><div style="font-size:34px">🌤️</div><div><b>白天约 20-24 度，早晚 10 度出头</b><div class="muted">海边风大，跨年夜站河边会冷。带厚外套或薄羽绒、防风衣。</div></div></div>
+      <div class="row" style="margin-top:12px"><div style="font-size:34px">🏖️</div><div><b>防晒和泳衣别忘</b><div class="muted">清水湾那两天是这趟唯一能认真下海的日子。</div></div></div>
+    </div>
+  </section>
+
+  <!-- PLAN -->
+  <section class="view" id="v-plan">
+    <h2><small>DAILY PLAN · 每日行程</small>Day by Day</h2>
+    <div class="dayscroll" id="dayPills"></div>
+    <div class="mapbox" id="mapDay" style="margin-top:6px"></div>
+    <div id="dayBody"></div>
+    <div class="nav2"><button id="prev">← 前一天</button><button id="next">后一天 →</button></div>
+  </section>
+
+  <!-- TICKETS -->
+  <section class="view" id="v-tickets">
+    <h2><small>BOOKINGS · 预订与门票</small>Reservations</h2>
+    <div class="filters">
+      <button class="chip on" data-f="all">全部</button>
+      <button class="chip" data-f="booked">已订</button>
+      <button class="chip" data-f="todo">待办</button>
+      <button class="chip" data-f="info">不用订</button>
+    </div>
+    <div id="tkList"></div>
+  </section>
+
+  <!-- BUDGET -->
+  <section class="view" id="v-budget">
+    <h2><small>BUDGET · 花费估算</small>The Numbers</h2>
+    <div class="total">
+      <div class="s">已选项目合计（美元，按 2 人估算）</div>
+      <div class="big" id="bt">$0</div>
+      <div class="s" id="bsub"></div>
+      <div class="bar"><i id="bbar" style="width:0"></i></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <b>回程机票档位</b>
+      <div><div class="seg" id="fare"><button class="on" data-p="222.98">Basic</button><button data-p="262.98">Choice</button></div></div>
+    </div>
+    <div class="card" style="margin-top:14px" id="bList"></div>
+    <h2><small>NOT INCLUDED · 未计入</small>Not Counted Yet</h2>
+    <div class="card"><ul class="tbd" style="margin:0;padding-left:18px;font-size:14px">
+      <li>三家酒店房费（EVEN、Wyndham、EDITION），以确认单为准</li>
+      <li>EDITION 的 destination fee 和代客泊车费</li>
+      <li>租车、油费、EPCOT 门票</li>
+      <li>餐饮：Morimoto Asia、Aji Limo、Rocca、Sea-Guini 等</li>
+      <li>跨年票（EDITION 屋顶派对或 Jackson's VIP 观景区，可选）</li>
+    </ul></div>
+    <p class="muted" style="margin:12px 4px">点开关可以把某项计入或排除。Aquarium 按区间算，Premier Pass 按近期最高 269/人估。</p>
+  </section>
+
+  <!-- LIST -->
+  <section class="view" id="v-list">
+    <h2><small>CHECKLIST · 出发前清单</small>Before Takeoff</h2>
+    <div class="card prog"><div class="ring" id="ring"><span id="ringT">0%</span></div><div><b id="progT">0 / 0 已完成</b><div class="muted">勾选会记在这台设备的浏览器里</div></div></div>
+    <div class="card" style="margin-top:14px" id="ckList"></div>
+    <h2><small>PACKING · 打包</small>Pack List</h2>
+    <div class="card" id="packList"></div>
+    <h2><small>REMINDERS · 提醒</small>Key Dates</h2>
+    <div class="card" id="remList"></div>
+    <div class="foot"><div style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:16px;color:var(--ink);margin-bottom:6px">Here's to us ♡</div>所有营业时间和演出时间出发前再复核一遍。<br>EPCOT 看 My Disney Experience App，肯尼迪看官网日历，跨年烟花看 Friends of the Tampa Riverwalk 活动页。</div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>window.GEO={"land":"M-100 -101.7L216.1 -101.7L215.8 -96.4L216.2 -93.1L214.6 -94.3L213.8 -95.9L213.5 -98L213.5 -100.6L213.3 -101.7L210 -101.7L210.1 -100.2L209.8 -98.2L210 -96.2L210.7 -94.6L212.4 -94L212.5 -93.5L215.2 -91.3L215.8 -90.4L216.5 -88.7L217 -87.8L217.6 -87.2L218 -86.9L218.5 -86.5L219 -85.5L219.4 -84L219 -80.4L219.3 -79.8L220 -79.2L220.7 -78.4L221.1 -77.3L220.4 -72.3L220.5 -67.6L223.7 -55.3L224.6 -53.2L227.2 -39.9L231.2 -25.6L230.6 -21.9L231.2 -21.8L232.1 -22.5L232.6 -21.5L232.8 -19.9L233.4 -17.3L233.8 -15.7L234.4 -10.1L235 -7.9L236.1 -4.2L237.5 -1.1L239 3.8L241.1 8.6L241.5 10.9L242.2 12.9L246.2 22L252.8 38.1L259.4 52.5L263.7 61.9L266.8 67.7L268.5 69.2L267.8 71.4L269.1 72.7L270.8 74L271.7 76L272.2 78.1L285.7 100.9L292 111.1L297.3 118.6L303.2 129.1L305.7 136.4L307.2 138.7L306 141.1L304.2 143.1L303.2 143.3L303 143.9L302.5 144.9L301.7 145.7L300.9 146.1L300.6 146.7L300.5 157.8L299.8 159.2L300.6 160L300.3 162.4L300.8 168.6L302.9 180.1L304.3 183.3L304.7 185.1L306.8 190L314.8 202.3L314.9 207.2L312.5 202.5L312.2 201.5L311.8 200.7L308.8 197.2L307.8 193.2L301.9 182.4L298.9 173.5L298 168.7L298.2 149.2L301.2 134.9L301.3 130.5L300.6 126L300 124.3L299.1 123.2L297.7 122.7L295.7 122.8L294.9 122.3L294.3 122L293.7 122L293.6 122.4L293.7 124L293.7 124.4L292.5 124.8L291.6 124.8L285.2 123.7L283.4 122.9L282 121.3L281.6 119.6L281.6 117.4L282 115.2L282.7 113.6L283.4 114.3L284.3 112.6L285.1 110.3L284.8 108.3L280.5 106.7L277.1 103.6L275.2 102.8L276.8 113.1L277.9 115.8L277.9 116.7L277.2 117.4L280.3 123.4L280.6 125.6L281 130.2L283.4 141.1L284.3 143.4L286.2 149.9L289.1 155.9L289.9 158.6L305.9 194.2L321.9 229.8L325.5 247L340.2 283L340.3 284.7L339.4 282.5L338.3 281.4L334.3 280.4L332 279.2L331.4 278.7L330.7 278L329.9 277.6L328.6 277.7L329.2 278.6L331.7 281.6L332.4 281.8L334 282.8L334.8 283.2L337.1 282.5L337.9 282.3L341.7 286.6L342.3 288.1L345.1 289.5L345.8 291.3L346.1 292.9L348.5 297.9L350.5 304L352.4 308.1L352.6 309.5L351.9 310.7L350.8 311.1L349.7 311.2L348.5 311.8L348.5 312.5L349.8 313.1L352 313.7L352.9 314.5L353.6 315.6L356.2 326.4L356.2 329.5L354.6 331.1L354.6 332L355.9 333.8L356.5 337.3L356.8 351.7L356.2 355L354.6 355.2L353.8 370.5L352.8 374L352.6 375.7L352.7 379.6L352.5 381.5L351.9 383.1L352.2 385.6L349.7 402.3L348.8 405.7L347.1 407L347.1 407.8L348.7 410.3L347.3 440.7L346.4 440.7L346.4 438.8L347.1 433.7L347.1 430.8L346.8 429.3L345.9 429.3L342.3 434.1L341.7 438.2L340.7 440.7L226.4 440.7L225.2 438.8L222.8 436.6L220.4 434.9L219.1 434.3L216.2 433.8L214.9 433.3L213.8 432.3L212.5 430.4L211.4 429.5L210.1 430.9L209 430.4L207.9 429.3L205.8 428.4L204.5 427.3L203.6 427.1L203.2 427.3L202 428.3L201.2 428.6L201.6 427.8L201.6 427.4L201.2 426.5L200.4 426.7L199.3 426.3L198.3 425.4L197.7 424.1L196.7 424.9L196 426.4L195 427.1L193.8 427.3L192.6 427.2L191.6 426.6L190.9 425.6L190.6 426.2L190.2 427.1L189.4 427.8L189.5 428.6L188.9 428.6L188.2 428.5L187.8 428.3L186.8 427.1L186.4 426.2L185.7 422.9L187.1 422.3L188.3 423.1L189.4 424.2L190.6 424.8L191.5 424.3L192.5 423L193.2 421.5L193.6 420.2L192.1 420.2L189.8 420.4L188.9 420.2L187.8 419.3L186.8 418L186.6 416.7L187.4 415.6L184.6 413.3L183 410.4L181.3 402.3L180.9 403.4L180.6 404.5L180.6 405.7L180.7 407L179.9 407L178.1 398.9L177.2 390L177.9 386.1L177.9 385.4L177.8 385L174.8 379.5L174.4 377.6L175.1 377.6L175.1 378.3L175.8 378.3L175.6 371.3L175.1 369.1L174.4 367.4L172.4 363.8L171.7 362.1L171.8 363.7L172.2 366.5L171.7 367.5L171.3 367.8L170.6 367.5L170.1 367L169.7 366.7L167.6 366.7L162.2 363.6L160.8 364.3L160 363.6L159.4 364.4L159.1 363.3L159.1 361.7L159.4 360L160 359L160.4 359L161.1 360.3L161.8 360.6L162.6 360.4L163 360L163.4 359.5L166.2 357.6L168.8 355L170.7 351.9L170.3 349L171.4 347.6L175.8 343.2L176.2 342.1L177.1 341.1L178.2 340.6L179.2 341.2L180.2 340.5L181 339.7L181.5 338.7L182 337.3L180.5 337.9L178.1 339.3L176.2 339.6L174.5 340.3L172.6 341.9L169.3 345.5L168.2 347.3L165.2 356.1L164.8 356.7L164 357.1L161.7 357.8L160.7 358.3L160.7 356.7L158.7 357.5L157.3 358.4L156.1 358.4L154.5 356.7L153.7 354.7L153.9 353.3L154.4 351.7L154.5 349L154 347L152.3 343L151.8 341.2L151.9 338.7L154.3 325.6L154.5 323L154.3 320.3L153.5 319.2L152.2 318.5L150.1 316.8L150.3 315.3L152.2 313.8L157.2 310.8L159.4 310.3L160.4 309.8L160.9 309L162.2 305.5L160.5 306.1L158.3 308.2L154.3 309L152.5 309.7L150.7 310.1L148.4 309.5L148 311.3L146.8 311.7L145.5 311.8L145 312.9L144.5 313.3L143.4 312.3L141.6 310.2L141.9 308.2L140.9 308.6L139.3 309.4L137.8 309L135.8 305.6L134.7 304.3L132.6 303.3L132.9 304.2L134.1 306.3L137 310L138.1 311L138.8 310.2L139.9 311.4L141.3 314.9L141.9 315.6L142.4 316.5L144 320.7L144.9 325.7L145 327.3L144.3 328.8L143.4 329.3L143.1 326.1L142.2 324.9L142.1 325.3L141.6 326.1L140.8 326.9L140.2 327.3L138.9 326L138.5 325.7L138.1 325.9L137.7 326.4L137.1 326.5L136.4 326.3L135.4 325.4L134.7 324.9L133.2 324.4L132.5 324.2L131.6 324.2L128.6 322.1L125.7 312.5L123 309.5L123.3 311.2L124.6 313.9L125.1 315.6L123.9 314.9L123.4 314.5L123 314.1L122.3 311.8L113.3 293.6L112.3 289.6L109.9 284.9L109.3 282.3L109.8 283.6L110.2 284.2L110.7 284.7L110.7 282.8L110.4 281.2L109.7 280L108.7 279.2L108.7 280.8L107.9 280.8L106.7 278.3L105.1 276.1L103.8 273.9L103.8 271.4L104.2 271.8L104.6 272.1L104.9 272.4L105.2 273.1L105.9 273.1L105.8 270.2L103.7 265.9L102.6 260.5L101.2 259L99.3 258L95.5 255L91.7 254.4L90.2 253.7L89 252.1L87.1 246.9L86.7 245.1L87.4 245.1L88.9 248.9L89.5 249.8L90.5 250.5L93.2 251.8L94.3 252.9L95 252.1L95.5 251.2L95.6 250.2L95.6 249.1L94.9 249.1L94.2 249.6L93.5 249.5L92.8 249L92.2 248.2L93.9 246.3L96.4 247L98.9 248.4L101.1 248.2L100.1 247.3L99 246.7L97.7 246.2L96.3 245.9L97.9 245.1L100.8 244.3L102.1 243.3L102.8 241.9L101.2 242.1L99.9 242.7L97.7 243.6L98.2 242.7L98.5 242.3L98.9 242.4L99.4 242.6L99.9 242.5L101.1 241.3L100.8 240.9L100.4 239.8L102.5 238.3L103.5 236.3L104.3 234L105.6 231.6L108.3 229.4L108.7 228.5L109 227.2L109.8 226.6L110.7 226.3L111.4 225.9L113 222.7L113.4 221.9L116.2 220L117 218.8L120.2 215.1L121 213.4L120.7 210.9L118.8 206.1L117.8 201.5L116.6 200.1L114.9 199.9L112.8 201.1L111.9 202.4L111.5 204.2L111.4 208.4L112 210L112.2 211.2L111.7 212.3L108.2 212.1L107.3 211.9L106 209.7L105.9 206.9L106.5 201.5L105.9 198.6L104.1 197.1L101.5 196.5L98.4 196.5L98.4 195.6L100.4 194.9L100.4 194L97.6 192.5L96.4 191.4L95.6 190.2L94.9 190.2L94.9 190.6L94.9 191.8L90.9 187.8L91.2 188.8L92 190.6L92.2 191.4L92.1 192.3L91.6 193.5L91.5 194L90.9 194.9L91 195.4L91.9 195.6L95.6 195.6L94.3 197L89.7 198.3L88.1 200.3L92 201.8L95.7 204L99.5 205.5L103.8 205L102.9 205.7L99.7 207.6L99.9 208.9L100.4 211.3L100.4 212.7L100 213.8L98.6 215.5L98.4 216.1L98.2 216.8L97 220.3L97.7 222.2L97.3 224.2L96.2 225.9L94.6 226.6L92.8 226.6L92.1 226.4L91.5 225.9L91.3 224.9L91.4 222.4L91.2 221.9L89.1 221.7L87.8 220.9L86.1 218.1L84.3 216.1L80.4 213L78.5 211.1L78.1 212.6L78.9 214.2L84.9 220.7L86.1 222.8L87.5 226.7L88.2 229.2L88.1 230.6L86.9 230.3L85.7 228.3L84.9 225.8L84.6 223.9L83.3 220.2L77.1 214.1L75.8 211.5L75.5 210L74.6 206.8L74.4 204.5L74.8 202.5L75.7 200.5L76.8 198.9L77.8 197.9L76.9 199.4L76.2 201.3L75.9 203.3L76.4 205L79.8 195.9L82 185.5L82.1 182.5L82.4 181.2L83.3 180.1L82.3 178.5L81.8 176.8L81.2 174L81.2 172.4L81.3 170.2L81.7 168.7L82.6 169.3L84 167.8L84.6 166.3L85.4 163.2L87.5 160L88.3 158.4L88.1 156.9L87.7 157.3L86.7 157.7L90.3 148.2L91.5 146.8L91.5 146.1L91.4 145.3L93.6 141.5L93.7 135.4L93.9 134L94.9 130.7L95.3 121L96.3 119L95.9 118.2L95.6 117.2L95.6 116.2L95.9 115.4L96.8 114.3L96.8 113.5L96.5 112.8L96.3 111.6L96.3 107.7L96 106.8L95.3 106.6L94.6 106.6L94.3 106.2L93.8 104.7L91.8 102.2L91.5 101.2L92.9 99.4L94.5 100.3L97 103.5L96.2 100.1L96.1 98.9L96.9 93.5L96.6 91.8L95.6 90.4L94.9 90.1L93 89.8L92.2 89.5L91.5 88.9L87.3 83.7L86.8 81.8L87.4 79.5L86.2 79.4L85.1 78.8L84.5 78L85 76.8L85.3 75.7L85.3 72.3L85.4 71.8L81.7 68.8L80.5 66.9L82.6 65.6L80.9 64.7L80.2 63.4L79.9 61.6L79.9 59.4L77.9 60.4L77.1 60.9L76.7 60.3L75.5 59.2L75.1 58.5L73.1 59.9L70.8 59.8L68.6 58.9L66.8 57.8L65.6 58.2L62.8 58.2L61.4 58.5L59.6 59.2L58.9 59.3L57.6 59.4L55.9 58.7L55.5 57.4L55.4 56.1L54.8 55.5L53.4 55.2L52.6 54.4L52.7 53.4L53.8 52.3L53.1 51.3L52.4 49.8L51.5 48.3L50.1 47.7L48.6 47.4L46.8 46.6L45.2 45.6L44.2 44.6L43.9 43.9L43.6 42.7L43.5 40.4L41.5 36.8L38.4 32.7L36.7 30.8L34.7 29.1L32.2 29.5L29.4 27.4L24.4 21.4L23.3 21.6L22 20.9L19.5 19L20 18L19.9 16.4L19.4 14.7L18.8 13.6L19.9 12.4L20.5 10.1L20.7 7.5L20.3 5.1L19.1 3.7L17.4 3.2L15.4 2.9L13.4 2.1L12.5 1.4L11.3 0.3L10.6 -0.3L7.2 -1.8L5.6 -3.2L3.8 -5.2L2.3 -7.3L1.7 -9.2L1.6 -10.4L1.1 -13.1L0.7 -14.3L-0.3 -15L-1.2 -15.5L-1.6 -16.1L-2.5 -18.6L-6.2 -22.4L-7.1 -23.9L-8.1 -25L-12.4 -28.3L-13.7 -29L-15.4 -29.4L-16.6 -30.4L-18.8 -32.7L-21.2 -32.2L-25.6 -34.2L-35.1 -40.1L-42.4 -45.9L-44.4 -45.8L-47.6 -44.4L-54.8 -43.8L-56.8 -42.5L-57.8 -42.1L-58.4 -43.1L-58.8 -44.5L-59.6 -45.1L-60 -45.6L-60.3 -45.9L-60.9 -46L-61.6 -45.8L-62.1 -44.7L-62.7 -44.4L-64.8 -44.4L-65 -44.9L-65.5 -45.2L-66.1 -45.1L-67 -44.4L-67.8 -43.1L-68.4 -41.9L-68.5 -41.4L-71.7 -41.6L-72.9 -41.4L-76.4 -39.4L-77.1 -38.5L-77.1 -36.7L-77.7 -37L-78.4 -37.5L-79.1 -36.7L-78.7 -35.8L-78.8 -35.2L-79.1 -34.4L-78.8 -33.8L-78.4 -32.7L-78.1 -33.2L-77.4 -33.9L-77.1 -34.4L-76.4 -33.3L-74.4 -31L-74.6 -30.5L-76 -30.7L-78.5 -31.8L-81.9 -32.8L-83.8 -34L-85.4 -34.5L-86.6 -32.7L-85 -32.6L-84.6 -31.6L-84.5 -30.3L-83.6 -29.7L-77.4 -29L-74.3 -27.9L-73.6 -25.5L-74.9 -22.8L-77.7 -21.2L-76.8 -22.4L-76.4 -22.8L-76.4 -23.5L-80.1 -24.7L-84.3 -25.1L-86.2 -24.7L-88.1 -24.1L-89.7 -23.9L-90.8 -25.1L-96.3 -21.9L-100 -19L-100 440.7L-100 440.7ZM314.9 208.8L315.3 208.4L316.3 208L316.3 208.5L316.4 208.9L317 209.5L317.8 214.1L319.8 218.8L323.9 225.9L325.3 230.1L325.7 232.4L325.9 234.8L326.2 236.6L343.3 282.8L343.7 285.5L342.3 282.2L340.2 279.8L339.2 275.4L333.1 261.9L332.7 260.3L332.4 259.7L331 258.6L330.7 257.9L330.6 256.5L329.3 252.9L325.2 235.9L324.3 234L323.4 232.5L322.7 230.9L322.2 227.5L321.3 225.2L321.1 223.9L320.9 222.9L319 219.6L316.2 211.3ZM135.5 342.3L137.1 346.5L137.5 349L136.1 346.4L135.2 344.2L134 338.9L134.5 338.9L135.4 339.6ZM133.4 337.3L132.5 334.9L132.2 329.4L131.2 327.3L131.9 326.6L132.6 327.3L133.7 329.9L134.2 332.4L134.1 334.8ZM93.6 256.9L94.6 257.7L97 262.2L100.7 266.7L101.1 268.4L99.3 267.1L95.1 262L94.3 260.3L93.6 259.4L92.3 257.4L91.9 256.1ZM296.8 170.6L297.1 171.6L296.4 171.6L296.2 170.2L295.9 169L295.1 166.9ZM298.8 127.8L298.2 131.3L295 138.4L294.2 142.7L293.6 156.5L293.1 158.5L293 159.6L293.2 160.9L294.1 163.1L294.9 165L295 166.7L293.5 163.6L290 152.8L288.5 150.3L288 148.2L287.2 139.1L286.3 137.3L286 133.6L286.8 130.6L288.9 130.6L289.5 128.8L290.1 127.9L292.3 126.7L294.4 125.1L295.7 124.5L297.1 124.4ZM-97.6 -13.5L-98.6 -11.3L-100 -10.6L-100 -13L-99.3 -13.4L-98.4 -13.8ZM221.2 440L220.7 440.5L219 440.7L218.2 439.7L217.5 439.4L216.7 440.2L216 440.3L216 437.7L215.9 437L215.9 435.9L217 434.9L218.8 435.8L219.5 436.5L221.3 438L222 438.3L222.7 438.9L222.9 439.6L222.3 439.9ZM212.6 436.1L212 435.3L210.5 435.2L210.2 434.8L209.7 434.4L209.2 434.8L209.2 435.4L209.1 435.8L208.9 436.5L208.8 436.1L208.5 435.8L208 435.2L208.3 433.9L209.7 433.3L210.6 433.1L211 432.8L212.6 432.5L213.5 433.3L214.2 435L214.4 436L214.7 436.3L214.9 437L214.7 437.8L214 438.1L213.3 437.4L212.9 436.7ZM192.3 433.8L191 433.6L190.4 433.3L190.1 432.5L189.8 431.9L189.4 431.5L189.1 431.2L188.9 430.6L189.2 429.6L190.1 429.4L191.1 429.5L192.4 429.3L193.7 429.7L194 430.9L192.8 433.1ZM205.4 434.6L205.2 434.2L205.4 432.5L205.2 431.5L204.6 431.2L204.1 430.6L203.9 430L204.2 429L205.4 429.1L206.1 429.9L205.7 430.2L206.4 431.1L206.6 431.8L206.4 432.7ZM92.2 111.4L91.8 111.1L91.8 110.6L90.4 110.1L90.8 109.7L91.2 109.7L91.1 109L91.7 108.7L92.2 108.9L92.7 108.8L93.4 109.1L93.3 110.5L92.8 111.3L92.6 111.4ZM90.2 103.7L90.5 103.1L91.2 103L92 103.4L92.7 104.3L92.6 105.5L91.8 106.2L90.7 106.2L90.3 106.1L90.7 105.2L90.8 104.7L90.5 104.4ZM55 64.2L54.2 63.7L54.2 62.1L55 61.5L55.7 62L56.2 62.7L56.7 63.1L56.3 63.6ZM157.3 367.5L155.4 368L152.9 370.1L151.2 370.7L149.6 370.4L143.6 366.8L142.5 365.8L141.6 364.6L140.9 362.9L139.9 359.4L139.5 355.9L140.4 356.6L140.9 357.5L141.3 358.6L141.6 359.8L142.4 362.2L143.6 363.9L145.1 365.2L147.1 366L150.4 366.7L152.3 366.5L153.2 365.2ZM142.2 338.9L143.6 338.9L145.6 339.6L147.5 341.7L148.6 344.2L147.7 348.2L148.8 350.7L150.4 353.1L151.2 354.8L151.9 360.6L151.8 362.6L150.5 362.1L149.1 359.8L147.6 354.2L146.3 352L146.8 349.2L145.4 345.8L143.5 342.2ZM221.3 440.7L222.1 440.2L222.4 440.5L223.2 440.7L223.6 440.6L224.2 440.7ZM203.4 431L203.3 431.5L203.1 432L202.6 432.4L202.4 431.9L202.6 431L203 430.8ZM93.5 129.6L94.4 129.5L94.8 130.3L94.5 130.7L94.1 129.9ZM94.6 120.6L94.5 121L93.8 120.9L93.2 120.3L92.7 120.1L94.5 120.1ZM92 117.5L91.6 116.9L92 117.5ZM92.6 113.2L92.7 112.6L93.1 113.1L92.9 113.3ZM89.3 110.1L89.8 110.2L89.3 110.7L88.9 110.8L88.8 110.5ZM94 106.9L94.8 107.1L95.2 107.3L93.4 107.7L93.2 107.2ZM85.7 102.6L85.6 103L85.4 102.8ZM87.1 99.9L87.4 99.3L88.2 99.1L89.1 99.3L89.1 99.8L88.7 99.6L88 99.5ZM87.2 95.3L86.8 95.4L86.9 94.8ZM88.8 93.3L89.2 93.6L88.5 94.4L88.2 93.9L87.8 94.3L87.9 93.8L88.6 93.8L88.4 93.3ZM92.5 93.2L93 93.5L93.4 93.8L93 94.1L92.1 94L90.8 94.2L90.8 93.8L91.4 93.4L92.1 93.2ZM94.7 94L94.6 93.5L94.7 93L93.7 92.3L94.3 92L95.3 92.4L95.7 93.2L95.6 94.8L95.9 95.3L95.6 95.7L94.9 95.2L94.7 94.6ZM91.5 90.6L92.1 90.6L92.6 90.8L93.2 91.1L93 91.6L92.3 91.4L91.6 91L91.1 90.8ZM79 68.4L78.4 68.6L78 68.2L78.2 67.4L78.7 67.1L79.2 67.1L79.7 67.4L79.7 67.9Z","lakes":"M296.4 320.2L294.1 323.2L291.3 326.1L290.8 327.6L290.6 333.5L289.9 333.7L289.4 334.1L288.9 334.4L288.2 334.2L287.7 333.6L287.3 332.8L286.8 331.1L286.4 333.1L287.2 336.2L287.5 339.1L285.8 340.4L284.4 340.2L281.9 339.1L278.6 338.6L277.6 338L275.2 335.8L274 335L271.7 334.1L270.4 333.5L266.9 330.1L265.9 328.2L264.9 325.2L263.4 322.3L261.5 321.1L262.1 318.8L261.2 318.5L258 319.6L256.2 319.1L254.3 318L253.1 316.7L253.3 315.6L253.3 314.9L252.6 313.9L252.2 311.2L251.2 310.2L250.5 310.7L250.1 310.2L249.9 309.1L249.8 307.9L251.4 307.5L256.7 304.8L262.4 300.2L264.2 299.4L263.6 298.1L264 297.7L264.8 297.5L265.9 297L266.9 296.9L267.3 296.7L267.5 296.1L267.7 294.9L268 294.3L275.5 285.6L278.2 283.5L281.1 282.9L284.8 283.9L286.6 286.8L292.1 292.3L294.3 296.3L297.2 303.8L298.1 307.6L298.5 312.1L298 316.7ZM200.2 56.6L197.7 54.7L198.4 53.6L198.2 52.6L197.2 51.8L195.7 51.6L196.3 49.8L196 48.2L195.3 46.7L194.3 45.4L193.7 44.9L193 44.8L192.5 44.4L192.3 43.5L192.3 41.1L194.1 40.4L194.2 39.2L192.9 36.8L193.1 35.7L193.6 33.8L193.6 32.2L193.2 31.3L192.6 30.8L192 30.4L191.6 30L191.5 29.2L191.6 27.6L191.6 26.8L191.5 25.6L191.5 24.4L191.8 23.1L192.3 21.4L192.2 21.9L192.6 22.1L193.2 28L194.1 30.5L196 31.5L196.1 32.2L195.6 35.4L196 36.1L199.6 36.5L200.4 36.8L201.6 38.8L202.6 41.3L203.7 43.6L206.5 45.1L206.2 46.3L205.6 47.8L205.6 48.9L206.2 49.3L206.7 49.3L207.3 50L207.7 52.4L208 53.2L202.9 56.1ZM238.3 212.1L236.8 210.4L234.5 209.6L232.4 209.3L230.7 208.6L229.3 206.4L228.9 205.3L228.7 204L228.6 201.4L228.4 200.8L228 200.4L227.4 200.3L226.1 200.2L226 199.4L225.9 198.7L226.3 196.8L229.5 194.5L229.3 193.3L230.6 192.9L232 193.1L233.3 193.8L234.7 194.9L235.4 195.6L237.3 197.5L237.6 200.4L237.6 203.5L238.5 206.1L239.9 208.8L240.7 214.7L241.5 217.3L239.9 216.5ZM198.9 127.7L195.1 128.5L192.9 126.7L194.9 126.6L194.5 125L192 121.6L191 119.6L191.2 117.3L192.3 115.6L194.3 115L195.3 115.5L196.3 115.3L197.1 115.1L197.7 115L198.7 115.5L199.3 116L200.4 117.4L202.8 119.5L203.6 120.7L203.9 122.4L202.4 125.3ZM236.3 264.6L235.2 265.6L233.8 268.3L231.7 270.2L229.5 270.7L228.6 268L228.6 262.6L228.1 261.6L227 261.4L226.1 261L225.9 259.2L227.2 257.2L229.7 255.6L232.3 254.8L234.1 255.3L234.7 256L234.8 257.9L235.7 259L236.7 260.1L237.4 261.5L237.3 263.3Z","urban":"M-61.2 -82.1L-62.3 -82L-64.6 -82.2L-65.6 -82.1L-66.3 -81.5L-67.1 -79.9L-67.9 -79.6L-69.7 -79.5L-70.1 -80.1L-70 -81.7L-72.6 -82.5L-75.5 -80.6L-76.7 -80.8L-77.7 -82.5L-79 -89.6L-76.2 -90.7L-70.4 -91.1L-67.9 -92.1L-67.6 -92.9L-66 -93.7L-65.1 -94.5L-64.1 -95.7L-63.4 -97.2L-61.7 -96.4L-61.5 -94.7L-62.3 -90.9L-61 -84.5L-61.2 -82.1L-61.2 -82.1ZM89.9 -53.2L89.8 -54.6L90.4 -55.2L91.3 -55.4L92.1 -55.7L93.2 -57.6L94.5 -58.4L96.6 -58.2L96.4 -55.3L94.9 -53.8L92.6 -53.3L89.9 -53.2L89.9 -53.2ZM232.8 -19.9L233.4 -17.3L232.4 -16.8L231.4 -17.3L229.6 -19L228.8 -19.3L227.9 -18.1L227.6 -17.3L224.7 -18.1L223.8 -19.3L223.2 -21.8L223.1 -23.3L223.3 -25.1L224 -27.2L225.4 -29.4L226.5 -29L227 -28L227.2 -26.7L227.7 -25.6L229.4 -24.3L230.9 -23.9L230.6 -21.9L231.2 -21.8L232.1 -22.5L232.6 -21.5ZM120.7 10.2L119.9 9.6L119.8 9L120 7.5L117.3 5.8L116 4.9L115.5 3.3L115.6 2.3L116.7 -0.4L117.7 -1.7L118.9 -2.4L122 -2.4L123.2 -3L123.5 -4L124.3 -4.3L124.3 -3.2L133.2 -1.7L133.3 -0.7L128.8 7.1L127.8 7.6L125.5 7.9L124.3 8.3L123.2 9.6L122.4 10.1L121.5 10.3L120.7 10.2ZM195.4 7.1L191.3 4.8L189.7 3.1L189.9 0.8L190.6 0.1L191.7 -0.3L194.3 -0.5L194.4 2.3L196.3 5.3L195.4 7L195.4 7.1ZM234.3 17.1L234.7 13.8L235.8 11.9L237.6 11.3L239.9 12.1L239.4 14.4L238.4 16L236.7 16.9L234.3 17.1L234.3 17.1ZM262.7 59.7L260.7 65.6L258.8 67.3L257.5 67.2L256.6 66.6L254.3 63.5L254.4 61.5L252.9 60.1L250.3 59.4L248.8 58.5L248.6 56.2L249.3 54.8L250.3 53.7L251 52.2L250.1 50.4L249.1 50.3L247.9 50.5L246.5 49.7L246.4 47.1L247.6 43.4L247.7 40.9L248.1 41.4L249.3 41.8L249.9 42.2L251 44.7L253.7 40.5L258.6 50.9L259.1 52.3L259.9 53.8ZM149.9 61L148.8 61L147.4 60.1L146.6 59.8L144 60.3L142.3 62.4L141 62.3L139.9 59.8L137.7 56.1L137.7 54.7L146.8 52.3L150.8 53.6L152.1 58.5L151.3 58.7L149.9 61L149.9 61ZM229 81.3L227.6 80.2L226.9 78.3L226.5 76.1L226.7 73.8L228.1 71L228.8 68.6L231.6 70.6L231.4 73.9L230.5 77.7L231 81.1L229 81.3L229 81.3ZM263.3 77.4L263.6 72.4L264.4 71L267.9 68.7L268.5 69.2L267.8 71.4L269.1 72.7L270.8 74L271.7 76L263.3 77.4L263.3 77.4ZM235.3 84.9L236.5 84.9L236.8 87.3L235.8 88.9L232.1 91.2L231.2 91.1L231 92.4L229.7 91.8L227.8 89.7L226.6 89.9L226.3 87.9L226.9 86.6L228.8 84.9L228.7 83.8L230.1 83.5L231 84.4L231.6 85.5L232.1 86.1L233.3 86.1L235.3 84.9ZM102.1 94.9L100.7 94L99.8 92.6L98.8 88.6L101.5 88.7L103 90.3L103.2 92.7L102.1 94.9L102.1 94.9ZM190.1 99.6L188.8 98.7L189.1 97.6L189.5 94.5L189.9 93.7L191.4 93.6L192.9 94.7L194 96.6L194.3 98.7L193.1 99.6L191.6 99.9L190.1 99.6ZM171.3 101.1L169.2 100.1L167.9 98.1L167.7 94.9L170.1 95.6L172.2 96.7L173.7 98.5L174.3 101.2L171.3 101.1ZM279.9 128.2L278.9 127.7L277.6 126.3L275.8 125.3L275 123.5L274.8 121.9L274.9 120.2L275.3 118.7L275.9 117.6L276.7 116.7L277.7 116.1L277.9 116.7L277.2 117.4L280.3 123.4L280.6 125.6L280.9 128.1L279.9 128.2L279.9 128.2ZM102.8 135.5L100 138L96.6 138.9L96.5 138.2L97.4 137.8L98.3 134.4L98.8 133.8L100.6 134L101.4 133L101.7 130.9L102.1 130.1L103.9 132.5L102.8 135.5L102.8 135.5ZM288.3 155L287.7 155.2L286.7 155.2L285.4 153.9L284.3 153.3L281.7 153.4L279.9 152.7L279.9 151.7L276.5 148.9L277.4 146.8L278.2 146.6L279.3 147.6L280.5 147.1L280.7 146L281 145.1L281.9 145.2L282.1 144.1L283.2 143.8L284.6 144.9L286.2 149.9L288.6 154.8L288.3 155ZM299.6 142.6L301.6 141.8L303.6 142L304.6 142.6L304.2 143.1L303.2 143.3L303 143.9L302.5 144.9L301.7 145.7L300.9 146.1L300.6 146.7L300.6 152.1L299 152.4L298.2 152.6L298.2 149.2L299.6 142.6ZM294 146L293.8 151.5L290.3 153.6L290 152.8L288.5 150.3L288 148.2L287.5 142.6L288.6 143.2L289.8 145.2L290.6 145.9L291.9 146.2L294 146L294 146ZM95.5 160.2L93.7 167L93.2 167.7L91 169L90.9 170.2L92 171.8L92.1 172.7L90.3 173.9L92.1 179.2L93.2 180.3L94.1 180.2L95.2 180.8L96.6 182.8L98.2 183.7L99.6 182.7L103.2 177.8L104 177.4L104.8 175L105.9 173.9L107.6 173.2L109.9 172.7L112 173.2L113.7 176.5L115.5 177.8L118.2 178L119.9 177.1L121.6 175.5L124.3 174L124.3 170.2L125 170.9L125.5 172.2L125.6 173.8L125.5 175.3L125.2 176L124.3 176.5L123.6 177.7L123.7 178.8L125.5 182.8L125.3 184.9L126.4 185.3L126.6 185.9L126.5 187.3L128.8 190.3L129.5 190.7L129.9 191.6L130.1 192.2L130.7 192.6L132.1 192.8L135.5 195.3L135.6 198L133.2 205.4L132 204.7L131.1 203.6L129.9 202.8L127.7 202.9L126.8 203.5L126.6 204.1L124.7 203.2L122.4 200.9L121 200.4L118.4 204.3L117.8 201.5L116.6 200.1L114.9 199.9L112.8 201.1L111.9 202.4L111.5 204.2L111.4 208.4L111.8 209.4L106 208.2L105.9 206.9L106.5 201.5L105.9 198.6L104.1 197.1L101.5 196.5L98.4 196.5L98.4 195.6L100.4 194.9L100.4 194L97.6 192.5L96.4 191.4L95.6 190.2L94.9 190.2L94.9 191.8L90.9 187.8L91.2 188.8L92 190.6L92.2 191.4L92.1 192.3L91.6 193.5L90.9 194.9L91.9 195.6L95.6 195.6L94.3 197L89.7 198.3L88.1 200.3L92 201.8L95.7 204L99.5 205.5L103.8 205L102.9 205.7L99.7 207.6L99.9 208.9L100.4 211.3L100.4 212.7L100 213.8L98.6 215.5L98.4 216.1L98.2 216.8L97 220.3L97.7 222.2L97.3 224.2L96.2 225.9L94.6 226.6L92.8 226.6L92.1 226.4L91.5 225.9L91.3 224.9L91.4 222.4L89.1 221.7L87.8 220.9L86.1 218.1L84.3 216.1L80.4 213L78.5 211.1L78.1 212.6L78.9 214.2L84.9 220.7L86.1 222.8L86.7 224.4L85 224.9L84.6 223.9L83.3 220.2L77.1 214.1L75.8 211.5L75.5 210L74.6 206.8L74.4 204.5L74.8 202.5L75.7 200.5L76.8 198.9L77.8 197.9L76.9 199.4L76.2 201.3L75.9 203.3L76.4 205L79.8 195.9L82 185.5L82.1 182.5L82.4 181.2L83.3 180.1L82.3 178.5L81.8 176.8L81.2 174L81.2 172.4L81.3 170.2L81.7 168.7L82.6 169.3L83.3 168.6L84 167.8L84.6 166.3L85.4 163.2L87.5 160L88.2 158.6L88.1 156.9L87.5 157.4L86.7 157.7L87.7 155.2L90.3 148.2L91.5 146.8L91.5 146.1L91.4 145.3L92.5 147.2L93.4 150.2L93.8 158.5L94.4 160.2L95.5 160.2ZM228.9 164.8L227.7 164L227.7 161.5L228.9 160.6L229.6 160.7L230.4 161.2L232.1 161.5L232.1 164L230.4 164.2L229.6 164.7L228.9 164.8L228.9 164.8ZM163 195.1L162.1 194.5L161 192.8L158.2 189.4L157.7 187.8L157.9 186.3L159.9 182.8L160.4 180.5L160.5 179.4L161 178.6L163.2 177.8L163.5 177L164.3 176.5L165.4 177.8L165.8 178.3L166.2 179.8L166.6 180.3L167.4 180.7L169.1 181.1L169.9 181.5L170.6 182.7L171 184.1L170.9 187.3L169.8 190L167.9 192.2L164.1 194.9L163 195.1L163 195.1ZM189.3 183.2L187.7 184.1L192.6 188.8L193.2 191.6L192.6 191.9L192.4 192.5L192.1 194.1L190.7 193.5L184.3 192.8L184.1 192.2L183.2 191.6L181.3 191.5L180.5 191.3L179.9 187.8L177.7 184.1L174.3 184.1L174.9 183.1L181.4 180.1L182.1 180.3L182.1 181.3L183.7 181.8L185.5 181.5L186.9 180.7L187.7 179L189.2 179.8L189.8 181.5L189.3 183.2L189.3 183.2ZM142.1 191.6L141.9 189.6L142.4 188.3L144.3 186.6L145.5 184.6L146.4 184.3L147.7 185.3L148.4 186.5L148.7 188L148.8 191.6L142.1 191.6L142.1 191.6ZM198.8 203.8L197.8 202L197.8 199.8L198.8 197.9L200.6 198L201.1 199.6L201 204.1L198.8 203.8ZM321 236.8L319.5 235.9L317.4 233.3L315.4 233L315.6 231.4L316.1 230L317.6 228L318.3 227.4L318.8 226.7L319.9 227.2L321.4 228.7L321.9 229.8L322.6 233L321.7 234L321.4 236L321 236.8L321 236.8ZM106.7 243.9L109 247.4L109.9 248.1L110.4 254.1L111 254.3L111 253.1L113.2 254.3L113.3 255.6L112.3 257.9L112.1 259.4L112.5 260.3L114.3 261.9L114.2 263.9L114.6 264.4L115.3 264.3L115.9 265.9L116.1 267.3L116.5 268.4L117.7 269.4L116.9 271.4L115.8 273L114.3 274L112.1 274.4L111.8 275.2L113.2 279.4L112.7 280.9L111.8 281.7L110.6 282.2L110.4 281.2L109.7 280L108.7 279.2L108.7 280.8L107.9 280.8L106.7 278.3L105.1 276.1L103.8 273.9L103.8 271.4L104.6 272.1L105.2 273.1L105.9 273.1L105.8 270.2L103.7 265.9L102.6 260.5L101.2 259L99.3 258L95.5 255L93.1 251.8L94.3 252.9L95 252.1L95.5 251.2L95.6 250.2L95.6 249.1L94.9 249.1L94.2 249.6L93.5 249.5L92.8 249L92.2 248.2L93.9 246.3L96.4 247L98.9 248.4L101.1 248.2L100.1 247.3L99 246.7L97.7 246.2L96.3 245.9L97.9 245.1L100.8 244.3L102.1 243.3L102.8 241.9L101.2 242.1L99.9 242.7L97.7 243.6L98.2 242.7L98.9 242.4L99.7 242.6L101.1 241.3L100.4 239.8L106.7 243.9L106.7 243.9ZM319.9 258.1L322.9 251.2L323.2 248.1L326.4 249.5L326.9 250.4L328.3 253.8L328.6 256.6L327.6 260.6L327.6 260.6ZM319.9 270.5L318.1 269.6L317.6 266.9L322.1 266.9L321.6 269.6L319.9 270.5L319.9 270.5ZM341.7 286.6L342.3 288.1L343.2 288.5L339.5 289.7L338.4 289.6L337.7 289L337 287.5L336.5 287L332.9 286.2L332.1 285.7L331.9 284.8L332.9 282.8L334 282.8L334.8 283.2L337.1 282.5L337.9 282.3ZM329.4 268L331.8 271.1L332.5 273.1L333.6 273.8L336.1 273L340.2 283L340.3 284.7L339.4 282.5L338.3 281.4L334.3 280.4L332 279.2L331.4 278.7L330.9 278.2L330.3 275.3L329.9 274.4L327.7 271.5L326.6 269.3L326.5 266.9L327.1 266.8L327.5 267.8L328.1 268.2L329.4 268L329.4 268ZM115.8 298.5L113.3 293.6L112.3 289.6L111.2 287.4L112.2 287.1L113.4 287.4L114 288L114.6 288.8L115.5 289.5L117 290.1L118 290.1L118.9 290.5L119.9 292L121.3 295.2L121.6 296.9L121 298.3L119.9 298.6L119.9 298.6ZM151.9 305.1L152.7 305.3L153.4 306.6L153.6 309.1L152.5 309.7L150.9 310.1L149.7 308.3L146.6 307.1L146.6 306.1L145.7 305.9L145.5 304.8L143.8 303.2L143.3 302.3L143.2 300.8L144.5 300.1L145.9 299.9L147.4 300.2L148.8 300.8L149.3 301.5L149.5 303.7L149.9 304.6L151 305.2L151.9 305.1L151.9 305.1ZM129.8 310.9L126.7 315L125.7 312.5L123 309.5L123.3 311.2L124.6 313.9L125.1 315.6L123.9 314.9L123.4 314.5L122.3 311.8L121.5 310.1L124.3 306.1L125.9 306.9L129.8 310.9L129.8 310.9ZM152 314.5L152.2 313.8L157.2 310.8L157.3 313.5L154.7 314.9L152 314.5ZM181.7 374.7L182.2 375.1L182.1 375.9L182.6 377L182.8 378L182.7 379L182.1 379.9L180.2 381L180.8 382.7L184.5 386.4L185.4 388.7L185.5 390.9L185.2 392L183.2 395L185 396.1L186.7 395.9L188.7 395.2L191 395L190.9 396.1L191.2 398.8L191 400L190.4 400.6L188.5 400.8L187.7 401.2L187 402.4L186.2 405.1L185.4 406.3L184 406.9L182.5 407.2L181.3 402.3L180.9 403.4L180.6 404.5L180.6 405.7L180.7 407L179.9 407L178.1 398.9L177.2 390L177.9 386.1L177.9 385.4L174.8 379.5L174.4 377.6L175.1 377.6L175.1 378.3L175.8 378.3L175.6 371.3L175.2 369.5L176.8 370.8L179.9 374.9L181.7 374.7L181.7 374.7ZM190.6 424.8L191.1 425.2L191.3 425.8L190.6 426.2L190.2 427.1L189.4 427.8L189.5 428.6L188.2 428.5L186.8 427.1L186.4 426.2L185.7 422.9L187.1 422.3L188.3 423.1L189.4 424.2L190.6 424.8L190.6 424.8ZM203.2 -85.9L203.5 -85.1L204.3 -84.6L206.6 -83.3L207.1 -82.5L208.5 -79.6L208.8 -78.3L209.6 -76.6L215.4 -72L216.7 -72.5L216.6 -74.6L215.9 -76.7L215.4 -77.1L216.8 -80.6L219 -82.6L219.1 -83.7L219.3 -84.3L219 -80.4L219.3 -79.8L220 -79.2L220.7 -78.4L221.1 -77.3L220.4 -72.3L220.5 -67.6L223.2 -57.2L222 -56.9L220.1 -57.5L219.1 -59L217.3 -64.4L217.7 -65.8L215.4 -65.8L214.7 -65.1L214.3 -64.5L212.5 -64.6L212.1 -63.3L211.4 -63.4L209.8 -64.4L208.8 -64.5L208.2 -64.2L207.2 -63.4L206.6 -63.3L206.4 -59.7L207.1 -53.9L206.6 -52L205.5 -52L204.1 -53L203.2 -53.2L202.4 -52.9L201 -50.7L200.2 -50.3L199.3 -50.1L198.7 -49.5L198.8 -48.2L197.3 -49.1L196.5 -49.4L195.4 -49.4L194.9 -51.8L196.3 -56.7L196.5 -59.5L195.9 -62.5L195.4 -63.3L193.8 -64.5L193.1 -66L193.2 -68.3L191.5 -68.3L190.2 -68L189.2 -67.1L188.8 -65.8L188.7 -64.4L189.3 -63.8L190.2 -63.6L191 -63.3L191 -62.3L192.2 -60.9L192.8 -60.1L192.5 -58.6L191 -55.7L190.3 -55.4L189.9 -54.5L188.8 -52L187.5 -51L183.2 -49.4L182.6 -48.6L182 -47.6L181.3 -47.1L179.9 -48.2L179.9 -50.7L179.3 -52.5L179.4 -53.3L180.9 -56.3L181 -57L180.7 -58.4L179.3 -60.6L178.8 -62L178.8 -64.5L179.9 -64.5L177.8 -69.8L177.8 -71.5L178.8 -73.3L181 -74.6L181.5 -76.6L181.7 -80.6L182.1 -82.1L183 -82.8L185.4 -82.9L186.5 -83.3L186.4 -85.4L186.8 -85.9L187.4 -85.8L187.6 -86.8L188.6 -87.1L189 -91.8L189.9 -93.4L191.4 -93.5L196.6 -90.9L198.2 -87.9L198.8 -87.1L199.8 -86.6L203.2 -85.9L203.2 -85.9ZM205.2 -77.7L201.3 -80.2L198.8 -80.8L198.9 -78.9L199.5 -78.6L201.7 -76.5L204.2 -75.1L206.4 -75L207.7 -77.1L205.2 -77.7ZM236 112.4L237.7 112.5L238.8 115L239.7 115L241.2 116.4L242.6 117.3L244.3 117.5L244.5 119.5L243.8 121.1L242.8 122.4L242.1 123.8L242.1 131.3L236.7 131.1L235.4 131.3L233.2 132.6L233.2 133.6L233.6 134.4L234.3 135.1L232.1 138.9L231.4 141.7L231 142.6L229.6 143.5L225.8 144.3L224.3 145.1L224.1 146.6L225.3 149.4L225.4 150.2L224.6 151.2L224.2 152L224.3 152.7L226.2 154.5L226.7 156.1L226.6 158.9L225.5 158.9L224.1 158L223.2 157.7L221.5 158L218.3 159.8L216.5 160.2L216.3 159.6L215.4 159L211.9 159.2L211 159L210.5 157.9L210.3 156.4L209.6 155.2L207.7 155.2L206 155.8L203.2 154.4L199.9 155.2L198 155.1L196.1 154.3L194.8 152.7L194.3 150.2L196.5 147.6L197.9 146.6L199.9 146.4L199.7 145L198.9 142.8L198.8 141.4L202.1 141.4L202.7 140.9L202.9 139.5L203.2 138.9L205 139L206.1 138.3L206.5 137.6L206.8 136.6L207.7 136.3L207 133.3L206.5 132.6L204.7 132.7L202.7 130L201 128.7L198.8 128.8L199 127.6L202.4 125.3L202.9 124.4L207.7 123.8L208.4 123.1L209.9 120L209.3 117.2L204.9 115.3L204.3 112.5L210.9 112.6L212.1 111.2L213.3 110.5L218.6 111.6L219.9 110L219.8 109L220.1 108.3L220.8 107.5L220.8 105.9L219.6 102.8L219.9 101.2L222.1 99.9L222.4 99.2L223.2 98.7L224 98.2L224.5 97.2L225.2 96.3L226.6 96.2L227.8 96.5L233.2 99.9L233.3 100.5L233.1 102L234 104.5L230.8 108.2L231 111.2L232.5 112.6L234.3 112.7L236 112.4ZM296.7 188.7L295.4 187.8L295.1 186.9L294.8 184.8L294.3 184.1L293.3 183.5L290.9 183.2L289.9 182.8L289.5 182.3L289.1 180.9L288.8 180.3L288.1 179.9L287.6 179L287.7 177.4L289.9 172.7L289.9 164L292.1 165.6L294.6 170.9L296 172.3L301.8 185.1L301.8 187.7L301.4 188.5L300 189.1L298.3 189.2L298.3 189.2ZM298 168.7L298 165.2L300.5 165.4L300.8 168.6L302.9 180.1L304.3 183.3L303 184.4L301.9 182.4L298.9 173.5ZM175.4 358.5L174.6 358.5L172.4 359.9L168.7 360.8L166.8 362.9L165.3 365.1L162.2 363.6L160.8 364.3L160 363.6L159.4 364.4L159.1 363.3L159.1 361.7L159.4 360L160 359L161.1 360.3L161.8 360.6L162.6 360.4L163.4 359.5L166.2 357.6L168.8 355L170.7 351.9L170.3 349L171.4 347.6L175.8 343.2L176.2 342.1L177.1 341.1L178.2 340.6L178.8 345.2L178.5 347L177.7 348.5L176.9 348.9L176.6 349.8L176.8 351.1L177.8 353.4L177.7 354.8L175.8 355.7L175.4 356.6L175.6 358L175.4 358.5ZM174.4 338.3L175.4 338.5L175.7 339.8L174.5 340.3L172.6 341.9L169.3 345.5L168.2 347.3L165.2 356.1L164.8 356.7L164 357.1L161.7 357.8L160.7 358.3L160.7 356.7L158.7 357.5L157.3 358.4L156.6 358.4L156.7 357.5L157.2 355.8L158 354.7L160.4 353L161 352.3L161.1 350.8L160.7 347.4L161 346L163.2 344.7L163.2 343.7L163.7 343L166 341.3L167.7 341L166.8 339.4L166.6 332.2L169.9 332.2L170.5 333.4L170.9 334.8L171.1 336.5L171 338.5L172.1 338.6L174.4 338.3L174.4 338.3ZM354.6 355.2L353.8 370.5L352.8 374L352.6 375.7L352.7 379.6L352.5 381.5L351.9 383.1L352.2 385.6L349.7 402.3L348.8 405.7L347.1 407L347.1 407.8L348.7 410.3L347.3 440.7L346.4 440.7L346.4 438.8L347.1 433.7L347.1 430.8L346.8 429.3L345.9 429.3L342.3 434.1L341.7 438.2L340.7 440.7L315.2 440.7L315.4 438.9L316.7 437.8L318.4 436.8L319.8 435.4L319.9 432.6L319.4 431.6L318.1 429.9L317.6 428.9L317.6 423.8L317 423.6L316.5 422.6L317.2 422.3L317.6 421.3L315.4 413.8L316.4 413L317 411.8L317.9 411L319.9 411.3L319.4 408.7L316.6 405.5L316.5 402.5L317.8 401.8L322.3 402.5L324.3 401.2L324.2 399.2L326.5 396.2L326.8 395.3L327.6 395L328.8 393L328.8 383.5L329.9 379.9L330.7 379.9L330.9 378.9L331.8 378.3L333.6 377.9L334.3 377.4L334.3 374.9L334.6 374.2L335.2 373.9L335.7 373.1L336.5 372.4L336.6 371.8L336.4 370.4L336.5 369.8L337.4 369.9L337.6 368.8L338.5 368.6L340.1 366.6L340.7 364.1L341.1 350.7L340.8 348.7L339.9 347.3L339 347.3L338.8 346.2L336.9 346.1L336.6 344.9L336 344.6L334.3 344.7L333.4 344.2L332 342.7L331 342.2L330.9 340.6L331.9 339.7L333.3 339.1L334.3 338.5L334.7 337.1L334.8 334.4L335.4 333.4L340.5 334.7L343.2 334.6L345.4 333.4L345.5 332.4L344.3 330.3L344.3 329.7L345.4 329.7L344.3 325.9L343.8 325.5L343.2 324.7L343.2 322.1L344 319.9L347.9 318L348.7 315.9L348.5 315.2L347.9 314.9L346.5 314.6L344.8 313.4L343.9 312.3L343.2 310.9L344.7 307L349.9 305.5L351.3 305.6L352.4 308.1L352.6 309.5L351.9 310.7L350.8 311.1L349.7 311.2L348.5 311.8L348.5 312.5L349.8 313.1L352 313.7L352.9 314.5L353.6 315.6L356.2 326.4L356.2 329.5L354.6 331.1L354.6 332L355.9 333.8L356.5 337.3L356.8 351.7L356.2 355Z","parks":"M284.8 108.3L283.1 107.7L279.5 102.5L276.6 100.3L275.7 97L277.6 94.9L271.8 83.9L276.4 85.3L285.7 100.9L292 111.1L297.3 118.6L290.1 119.4L287.2 112.3L285.1 110.3ZM239 440.3L234.1 440.3L233.6 433.7L224 433.7L223 437L221.6 435.9L222.5 431L224 427.2L225.4 413.5L225.4 395L225.9 389.5L272.3 389L272.8 420.6L276.6 420.6L276.6 425.5L274.4 440.7L239.2 440.7ZM225.2 438.8L223.1 436.9L224 433.7L233.6 433.7L234.1 440.3L239 440.3L226.4 440.7ZM221.2 440L220.7 440.5L219 440.7L218.2 439.7L217.5 439.4L216.7 440.2L216 440.3L216 437.7L215.9 437L215.9 435.9L217 434.9L218.8 435.8L219.5 436.5L221.3 438L222 438.3L222.7 438.9L222.9 439.5L222.3 439.9ZM221.3 440.7L222.1 440.2L222.5 440.7L223.2 440.7L224.2 440.7ZM219.6 434.6L216.2 433.8L214.9 433.3L213.8 432.3L214.3 430.4L219.6 430.4ZM213.5 433.3L214.2 435L214.4 436L215 437L214.7 437.8L214 438.1L213.3 437.4L212.9 436.7L212.6 436.1L212 435.3L212.9 432.8Z","roadsMajor":"M278.1 145.4L278.9 149L280.3 152.7L285.4 158.2L287.4 162.1L289 168.8L289.9 184.1L293.9 187.2L298.2 194.7L300.8 205.1L300.8 207.3L304.8 212.8L305.3 215.7L304.8 218.4L305.7 224.1L307.8 230.4L308.6 235.7L312.3 241.4L315.7 245.7L317.8 250.8L320.8 253.2L321.5 254.7L321.6 256.7L320.6 260M343.2 311.5L346.5 317.9L349.1 325.2L349.6 330.1L350.1 341.5M320.6 260L322.7 265.1L322.7 271L324.1 276.3L325.8 281L334.7 294.8L335.7 296.9L336.8 302.4L342.5 309.3L343 311.4M205.5 130.6L201.1 130.9L193.5 129.9L191.2 128.2L186.4 122.5L180.6 119.9L177.9 118.2L174.9 115.8L167.6 108.2L160.7 102.3L157.2 98.7L151.1 95.2M84.6 -63.9L82.9 -66.5L75.2 -74.7L68.6 -83.2L62.9 -87.5L56 -90.6L50.2 -98.9M84.6 -63.9L90.3 -62L97.6 -61.2L102.8 -61.4L112.6 -63.2L125.1 -63L131.5 -61.6L142.1 -65.1L153.9 -67.3L186.9 -70.2L192.6 -69.8M250.6 62.4L248 64L243.3 67.9L238.5 74.2L236.9 77.3L235 83.4L232.4 88.3L230.5 93.8L226.5 99.9L226.1 100.7M276.7 141.5L276.5 138.8L274.8 132.3L274.4 123.3L273.4 115.8L270.1 105L267.6 93.2L263 83.8L260.5 74.6L259.3 71.3L253.4 64L251.8 61.1M-64.7 -90.8L-57.6 -90.8L-55.4 -89.1L-51.7 -88.5L-41.5 -90L-37.8 -90L-32.3 -88.1L-29 -87.7M196.6 -92.2L195.2 -85.3M218.5 -63L221.1 -63M201.8 -62.2L210.2 -62.4L216.9 -63M201.8 -62.2L197.5 -66.9L195.1 -69L192.6 -69.8M-29 -87.7L-24.6 -87.5L-14.4 -84.5L-7.4 -84.2L-1.4 -82.8L11.7 -83.4L18.3 -80.2L47.3 -72.6L50 -72.4L56.8 -73.8L61.2 -73.2L68.8 -68.1L76.4 -65.7L84.6 -63.9M-99.6 -94.9L-91.7 -93.2L-84.4 -89.8L-74.3 -87.9L-72 -88.3L-64.7 -90.8M201.8 -62.2L206.5 -57.3L206 -54.3L206.7 -52.6L212.1 -45.5L212.2 -43.7L211 -39L211 -37.1L213.5 -32.3L219 -24.5L220.6 -17.8L228.2 2.2L232.6 5.3L240.9 22.2L247 39.7L247.1 46.1L250.1 55.8L252.5 61.5L250.6 62.4M84.6 -63.9L85.5 -62L89.3 -58.6L94.5 -47.5L99.4 -35.5L101.8 -32.7L104.2 -25.3L106.3 -17.6L108.7 -12.5L109.1 -8.8L112 -4.7L114.5 0.2L118.1 4.5L128.7 19.3L132 25L133.7 30.4L137.4 37.3L141.2 52.6L141.7 70.5L143.5 74L144.7 77.9L148.2 85.2L151.1 95.2M287.8 146.2L293.5 146M285.4 146.6L287.8 146.2M278.1 145.4L285.4 146.6M278.1 145.4L276.7 141.5M276.7 141.5L271.1 140.7L226.3 141.1L222 141.7L219.2 143.1M219.2 143.1L217.8 144.3L212.8 144.5M212.8 144.5L212.6 140.3L218.1 134.5L221.3 133.7L221.6 132.5L220.9 131.5M163.1 182.5L169 176.6L177.3 174.3L181.9 173.9L195.6 165.7L198.9 162.3L205.8 153.9M163.1 182.5L156 187.4L148.2 187.2L145 188.4L135.3 189.4L127.2 192M151.1 95.2L151.3 97.6L150.2 104.2L148.2 108.2L145.6 117L144 119.5L140 123.5L138.4 126L136.4 128.4L135 137.6L132.4 139.8L131.8 144.1L128.2 147.2L127.5 160.9L119.9 173.9L124.9 182.9L126.3 186.7L127.2 192M106 196.3L114.8 193.5L125.4 192.5L127.2 192M95.7 203.5L99.2 200.4L106 196.3M320.6 260L313.1 250.2L302.9 249.6L295.8 241.6L282.9 241.4L280.3 240.2L275.1 232.8L271.1 228.1L269.6 223.7L260 213.7L258.8 207.5L252 198.4L246.8 192.7L240.7 188.8L232.4 181.5L230.5 174.9L229.3 168.2L227.7 165.5L226.3 160.4L223.2 156.6L222 153.7L221.1 151.5L220.6 145.4L219.2 143.1M94 217.3L93.3 211.6L93.6 206.7L95.7 203.5M127.2 192L127.2 197.4L126.6 200.2L125.1 204.1L125.2 211.2L124.7 214.7L123.9 218L121.6 221.8L121.6 224.1L118.3 226.5L115.9 230.8L114 232L111 234.9L108.6 238.5M108.6 238.5L102 238.9L96.9 237.9L95.4 236.3L92.4 231.4L92.2 226.1L93.3 219.2L94 218.4L94 217.3M343.1 311.2L343.7 321.3L342.7 336.6L339.7 341.1M156.3 307.9L155.8 304.4L155.1 302.8L150.8 297.1L147.8 294.8L144.7 293.8L131.5 293.6L127.8 292.2L123.7 292.6L121.8 292.4L120.2 291L117.4 287.1L116.2 284.4L115.3 280.6L114.5 279.3L115.3 274.4L115.5 263.2L114.1 257.1L114 252L112.7 249.4L109.8 246.1L108.9 244.1L108.6 238.5M157.4 311.3L156.3 307.9M350.1 341.5L350 349.9L349.4 351.7L348 351.7L347.5 356.2L347.9 375.8L348.4 382.3L347.9 385.8L346.5 389.2L346.5 394.3L344.7 397L343.5 400.9L343.2 408.4M335.4 407.4L343.2 408.4M335.4 407.4L334.8 400.7L335.4 397.6L336.6 394.9L340.4 389.2L339.7 355.8L339.7 341.1M325.3 404.4L335.4 407.4M336.9 425.1L335.2 420.4L335 418L335.7 416.4L335.4 407.4M343.2 408.4L342.8 423.1L340.8 425.3L338.5 426.8M338.5 426.8L336.9 425.1M242.7 399.1L273.2 398.6L290.4 401.5L298.8 401.5M192.8 400.5L186.7 398.8L185.7 388.8L185.5 382.9L184.6 378.8L182.7 375.6L182.4 371.7L180.8 364.8L180.5 359.5L180.6 354.4L179.4 347.2L180.1 339.7L179.2 337.6L175.8 335.2L169.5 328.3L163.8 323.4L163.1 322.6L162.4 319.9L158.9 315.6L157.4 311.3M338.5 426.8L338.5 438.2M336.9 425.1L324.9 425.1L324.6 425.5M216.9 -63L218.5 -63M299.8 146.2L293.5 146M183.1 -69.6L183.6 -58.1L184.8 -55.5L188.1 -54.9L194 -54.9L196.8 -53.1L202.3 -53.1L205.6 -53.7L205.9 -54.4M204.7 131L204.6 131.5L200.6 134.6L197.3 138.4L197.3 142.1L199 154.5M199 154.5L210.5 153.9L217.8 150.2L232 150.2L235.9 147L236.4 143.3L236.1 141M324.9 404.7L328.8 398.8L330.5 390.5L330.5 383.9L341.2 384.2M205.9 -54.4L207.2 -57.5L207.9 -61.8L207.9 -68.6L203.4 -75.5L203.4 -79.8L201.8 -83L196.3 -85.9M186 -79.5L184.1 -76.1L183.1 -69.8L183.1 -69.6M195.7 -85.9L191.9 -85.9L188.6 -84.2L186 -79.5M195.2 -85.3L194.2 -80L193 -77.3L193.1 -72.2M215.5 120.3L207.9 119.1L205.1 121.5L205.1 127.8L204.7 131M236.1 141L235.9 139.6L233.1 132.1L233.1 125.2L234.8 119.1L236.4 116.6L236.4 112.3L233.6 109.1L231.5 105.4L227 101.1M220.9 131.5L219.4 131.5L217.1 130.3L213.3 129.9L205.5 130.6M315.7 401.5L325.3 404.4M205.8 153.9L211.7 146.6L212.8 144.5M226.1 100.7L223.9 105.2L222 110.9L220.9 117L221.1 119.7L222.3 127.2L220.9 131.5M221.8 132.5L222.4 134.4L221.3 138.7L220.7 143.1M321.4 259.3L323.6 261.7L325.2 265.5L326.3 268.6L328.5 273.6L330.7 279.8L332.3 285.4L333.4 291L333.4 291.6L335.6 297.2L337.3 300.9L338.4 304L340.6 307.1L342.8 310.2L343.9 313.9M325.2 424.5L325.5 419.2L323.9 412.3L323.9 406.2L324.9 404.7M341.2 384.2L348.6 384.5M192.8 400.5L233.8 400.5L235.7 399.2L242.7 399.1M298.8 401.5L315.7 401.5M105.3 196.8L105.9 193.1L105.9 189.3L103.7 186.9L103.7 184.4L104.8 181.9L105.9 176.9L106.4 171.9L104.8 163.9L104.8 157L105.9 149.6L109.7 147.1L111.4 144L111.9 136.5L111.9 130.9L110.8 119.7L109.7 115.4L104.8 110.4M169.7 176.3L170.8 181.3L171.9 184.4L172.4 189.3L168 190L165.8 191.2L162.5 191.2L160.3 190.6L157.6 188.7L156.5 186.9M109.2 204L111 200.7L112.5 198.6L114.3 198.5L115.1 197.4L118.2 197.3L119.5 197.8L123.1 197.8L124.8 200L126.9 200.3M321.1 430.6L322.4 426.4L327.1 422L328.1 421.5L330.5 421.5M193.1 -74.2L196.2 -74.2L196.5 -70.3L198.8 -68.1L198.5 -67.5M204 -66.3L204.2 -69.7M339.3 439.4L345.6 439.5L346.5 439.2","roadsMinor":"M163.1 182.5L164.3 184.7L164.7 187.2L168.1 190.2L172 195.7L174.6 203.5L183.8 202.4L186.7 201.6L191.1 202.2L195.4 203.5L199 202.9L200.1 203.7L201.5 208.6L201 212.2L201 217.9L204.4 223L203.9 227.7L207.4 233.4L208.2 236.1L208.1 238.1L208.8 241.4L210.9 248.1L212.8 251L215.5 251.2L217.5 253L218 254.5L218.5 260.6L221.4 267.1L223.9 269.3L223 270.8L226.7 278.5L227 281.2L226.8 285.8L226 301.3L228.6 308.5L228.9 313.4L236 316.4L238.1 320.1L240.9 323.6L251 323.8L251.8 324.6L251.5 328.1L252 330.7L253.2 332.5L255.7 333L266.4 333L269.9 333.8L276.5 338.7L283.8 340.7L286 342.1L288.7 343.4M-94.6 -24.1L-90.1 -25.3L-83.5 -25.3L-81.2 -25.9L-79.5 -27L-78.5 -29.4L-78.6 -32.3L-79.5 -33.5L-78.3 -45.9L-78.6 -48.4M103 133.3L104.7 124.8L104.9 114.6L104.4 103.8L102.7 101.5L101.6 90.5L100.9 90.3L99.4 87.9L92.9 75.6L93.6 73.6L95.9 70.3L96.4 68.3L96.1 60.5L93.1 58.9L91 56.5L73.8 25.3L74 24L67.8 12.6L66.2 12.2L64.5 13.2L63.6 12L62 11.2L52 10.2L44.5 5.9L34.4 2.2L32.9 1L28.5 -3.5L27.8 -5.7L27.5 -9L25.4 -12.1L17.6 -21.6L16 -23.9L14.8 -27.4L6.1 -36.5L4.2 -41.6L1.2 -45.9M-78.6 -48.4L-69.3 -50L-63.5 -54.1L-60.4 -55.5L-56.6 -55.9L-44.3 -55.9L-42 -55.3L-38.5 -51.6L-36.8 -50.8L-27.2 -49.2L-18.2 -49L-10.4 -45.1L-7.4 -44.1L-4 -44.1L-0.5 -45.9L1.2 -45.9M176.6 -98.3L180.3 -92.6L181.9 -87.5L187.6 -75.9L190.2 -73.8L193.1 -72.2M192.6 -69.8L194 -70.6L193.1 -72.2M-29 -87.7L-26.7 -94.9L-26.4 -98.3M1.2 -45.9L1.1 -47.3L-3.6 -53.5L-18.5 -71.8L-21.7 -76.5L-31.1 -80.4L-31.1 -82.2L-29 -87.7M-78.6 -48.4L-78.6 -50.4L-76.7 -57.1L-76.2 -62.8L-75 -68.1L-70.1 -74.3L-69.3 -76.7L-64 -76.7L-62.8 -84L-63.2 -87.3L-64.7 -90.8M339.7 341.1L350.1 341.5M288.7 343.4L292.6 342.9L293 342.3L293.5 336L315.2 336L320.3 340.5L328.6 341.1L339.7 341.1M288.7 343.4L288.8 353.6L289.7 356.2L310.7 386L313 389.8L314 393.1L315.7 401.5M268.5 436.5L264.7 435.3L243 433.1L235.9 431.6L230.5 429.2L226.1 429.2L222.1 427.4L218.8 427L214 425.3L210.2 422.5L208.4 422.7L206.2 421.9L202.7 419.8L201.5 419.6L186.7 408.4L180.8 402.9L188.8 402.3L190.4 400.7L192.8 400.5M94 217.3L88.8 217.5L88.1 215.9L86.3 214.7L82 213.3L82.2 202L81.3 202L83 189L83.2 178.6L87.4 165.5L88.8 159.6L90.5 156.2L90.5 151.3L97.6 140.3L103 133.3M96.1 -50.4L95.6 -51.6L96.1 -55.3M73.9 23.9L77.7 21.7L77.7 20.6L77.7 11.8L78.1 10.8L78 8.6L74.4 2.8L74.2 -4.6L73.3 -7.6L73.3 -15.4L74.1 -18.6L73.9 -28.6M63.8 -71.2L65.4 -73.7L66.2 -76.9L66 -78.6L66.6 -79.3L66.6 -83.8L67.1 -89.1M67.2 -28.9L66.8 -29.9L64.8 -50.1L65 -51.4L61.7 -53.9L61.2 -55L61.2 -65.1M63.9 -93.1L63 -94.1L61.4 -97.7M195.6 180L198.2 180L198.9 175.3L200.6 171.8L204.8 164.2L205.8 162.6L207 162.1L211.6 163.3L215.8 162.8L216.9 162.3L218.4 160.4L218.4 159.3L219.6 158.6L219.6 157.7M1.7 -45L1.7 -48.5L-0.7 -56.8L-1.3 -58.2L-4.7 -72.4L-5.7 -75.2L-5.6 -78.3L-2.8 -82.5L-3.1 -86.9M-3.5 -87.1L-3.1 -89.4L-3.2 -93.8L-3.8 -96.8L-3.8 -99.7M115.4 35.3L114.3 31L110.9 24.1L110 21.9L108 20.2L107.4 17.2L104.3 12.8L100.4 9.2L99.4 7.2L99.2 -11.7L100.3 -14.4M112.2 243.7L117.4 240.7L117.6 237.3L120.9 232.6L125.1 228.9L126.4 224.8L126.6 214.5L127.3 208.1M141.4 140.7L142.4 137.3L144.5 126.8L148.7 117.2L149.6 116.7L149.6 112.3L151.7 110.1L152.7 109.6L153.9 106.7L153 101.7L155.4 101.5L155.4 95.7L156.2 93.9L156.3 86.1L155.9 83.2L155.9 78M112.7 163L111 158.9L109.4 156.6L109.8 155.4L109.7 151.3L110.9 149.8L111.3 147.4L112.2 146.4L113.9 143M121.9 129.4L122.4 125.8L127.8 117.4L127.8 115.3L130.6 106.2L130.5 104.2L128.7 100.8L127.8 98.4L125.5 97.1L125.2 95.1L124 93.9L123.3 91.5L118 82.7L116.1 80.2L114.5 77.3L114.2 75.1L113.3 74.3L114.6 72.1L114.9 68L116 62L116.3 56.5L116 54.4L115.8 48.8L114.5 41.2L114.5 35.4M100.6 -14.6L99.2 -16.8L99.1 -26.4L100.3 -32.3L100.3 -38.4L99.8 -44.5L98.5 -47L96.1 -50.4M277 277.5L277 274.5L277.9 265.5L278.3 262L279.4 249.1L279.2 244.9L276.5 239.5L272.3 232.1L268.6 223.8L269.9 220.4L266.7 215.5L264.6 212.6L261.9 207.8L260.8 205L260.4 202.5L260.4 198.8L258 192L253.2 183.8L252.4 181.1L252.3 175.8M-62.9 -85.9L-55.2 -89.1L-51 -89.8L-47.2 -92.6L-44.3 -92.5L-39.4 -93.6L-37.4 -93.6L-29.1 -95.5L-25.2 -95.5L-22.5 -93.8L-20.7 -94L-16.4 -90.9L-13.2 -89.6L-11 -89.4L-10.1 -88.7L-7.8 -88.2L-6.2 -87.4L-2.9 -86.9L-0.7 -87.2L1.6 -86.9L4.6 -88.1L8.9 -89.2L13.7 -89.1L18 -86.9L22.4 -86.9L25.4 -84.7L28 -83.2L29.5 -81.5L36.6 -79.6L39.1 -79.1L40.2 -78.3L42.2 -77.9L42.8 -76.9L56.1 -70L61.5 -67.3M218.2 256.6L219.4 256.9L223.3 256.1L228.1 256.1L231.8 254.2L233.5 254.2L236.3 255.7L246.9 261.8L249.3 262.1L254.2 264.2L256.3 261.3L257.4 261.1L260.5 261.8L261.4 262.5L269.3 269.8L275 277L275 277.5M179.8 220.1L183.4 220.1L187.1 220.6L187.4 222.3L202.7 222.1M275.3 129.5L276.4 129.9L277.9 131.9L280 132.4L293.4 132.7L293.6 132.7M289.4 146.3L289.1 141.9L289.1 138.7L291.8 137.6L292.4 137.1L293.6 132.7M-70.5 -83.7L-68.1 -83.7M94.9 -55L96.2 -54.6L100.1 -54.6L100.6 -55M128.8 5.4L133 7.4L135.1 9.9L142 11.6L145.6 11.3L151.4 11.6M178.3 7.9L180.8 8.4L186.4 7.7L187.6 7.9L191 6.7L192.3 6.7M131.6 73.1L143.2 60.3L144.7 58.9L146 58.9M200.4 6L200.9 3.7L203.4 1L208 -1.6L210.6 -1.7L211.9 -3.1L212.5 -4.8L214.8 -8.5L216.6 -8.7L219 -11.7L221.2 -12.9L224.9 -18L227.5 -20.7M170.2 -38.2L173.2 -41.3L174.4 -43.8L184.7 -50.9L186.1 -54.4L186.4 -58.7L185.6 -62.7L188 -67.3M99.4 6L100.9 5.2L110.9 5.2L113 4.5L119.7 4.5L122.1 5.4L126.1 5.4M253 77.8L264.7 77.7L266.1 77.3M299.7 183.1L303.3 181.7M86.2 167.5L93.1 167.5M81 190.3L82.8 189.8L88.6 189.8L90.8 189L92 187.8L95.9 188.5L101 192.2L101.9 192.5L109.5 192.5M80.1 195.9L82.5 196.6L86.9 196.6M344.7 312.5L351.9 312.5M328.8 314.5L349.2 330.1M303.3 181.7L302.2 178L300.6 170.1L299.4 161.5L298.9 154.7L299.4 148.3L298 146.4L296.9 146.3M266.1 77.3L267.4 76.7M267.8 76.5L269.8 75.8L271 76M61.2 -65.1L61.2 -66.6L63.8 -71.2M219.6 157.7L219.6 143L220.3 139.2L220.3 131.6M194.6 -74.9L195.3 -78.3L194.9 -80.5L196.4 -85.5M109.1 245.3L112.2 243.7M127.3 208.1L127.3 205.4L125.2 202L124.5 197.1L124 196.4L124.2 192.5M102.6 246.3L103.8 246.3M155.9 78L155.4 76.8L155.3 72.6M107 267.9L105.3 267.2L105.3 265.2L104.1 261.1L102.5 257.9L102.5 249.3L102.8 245.1L103.5 243.7M113.9 143L120.4 129.4L121.9 129.4M114.9 186L114.9 192.5L118.6 192.5M114.9 186L114.9 181.2L114 179.7L113.6 177.2L114 173.1L113.4 170.9L114.3 167.2L113.9 164.2L112.7 163M338.7 426.2L339.5 425.5L339.2 412.7L339.3 410.3L339.9 407.8L339.5 391.2L339.9 390.5L339.6 371.5L339.5 352.2L339.8 341.2M96.1 -50.4L96.4 -55.3M195 -69L200.4 -66.8L204 -66.3L220.8 -66.4M-97.1 -100.4L-93.2 -96.8L-89.2 -96.2L-87.7 -94.5L-86.8 -92.6L-84.8 -90.4L-83 -89.8L-82.3 -88.7L-78.7 -85.9L-75.7 -85.9L-72.4 -84.3L-70.5 -84.7L-67.2 -84.2L-62.9 -85.9M99.7 -55L100.6 -55M61.5 -67.3L63.8 -66.3M229.6 72.9L232.1 72.8L233.6 71.9L238.1 67.9L244.5 64.3L248.4 62.6M234.2 26.5L235.6 25.5L241.7 25.3M99.7 -55L117.7 -40.6L124.2 -37L127.5 -36.5L132.4 -33.8L134.8 -32.3L140.3 -30.1L144.5 -29.1L145.9 -27.9L148.5 -27.8L149.4 -26.7L150.5 -24.4L154.1 -14.2L153.9 -11.7L158.4 -8.7L160.7 -5.5L163.8 -4.3L165.1 -2.9L169.2 -3.6L173.1 -3.8L179.5 -1.9L190.1 3.7L193.1 4.7M206.3 -30.5L205.8 -31L200.4 -33.3M170.2 -31.5L174.3 -31.5L175.6 -31.8L189.8 -32.1L192 -33M206.3 -30.5L208.8 -31.1L210.4 -29.8L213.9 -28.9L215.8 -27.6L218.8 -24.5M192.5 -32L193.5 -32.1L196.4 -31.3L200.4 -33.3M149.1 -28.4L150.6 -28.3L152.7 -28.8L157.8 -29.3L158.7 -31.8M201.5 10.8L202.5 11.3L210.1 21.2L212.1 23.1L215.2 24.8L224.8 24.6L228.5 26.1L232.4 26.3L233.5 25.8M195.9 60.1L197.7 59.8L200.3 61.1L203.1 61.8L205.1 60.8L207.4 60.8L209.2 59.8L213.4 59.8L216.9 58.7L218.2 57.6L223.1 55.9L224.5 55.7L227.5 53.7L229.6 53.3L234.8 52L236.9 52L238.4 50.6L240.6 50.1M156.6 54.4L164.7 55L167.2 56.7L168.4 56.7L169.8 58.1L173.4 59.6L176.4 59.3L188.9 58.9L192.3 59.3L194.7 60.3L195.8 60.1M144.5 134.8L147.8 134.8L149.1 134.3L150.8 132.1L151.5 129.4L155 129.4L162.7 126.5L167.4 127L171.6 126.8M121.6 256.4L123.6 257.8L128.7 259.6L132.1 261.3L135.2 261.5L139.9 264.2L143.2 265.4L146.3 267.2L146.9 268.1L152.9 271.6L153.6 271.8L164.4 276.8L166.5 278.5L170.4 279L171.1 279.6M176.7 281.6L185.9 281.4L204 281.4L212.8 281.6L234.1 281.6L248.1 281.4L252.2 278.4L261.1 278.4L262.9 277.5L275 277.5M279.7 277.2L285 276L294.5 269.4L295.4 267L297.3 264.5L302.8 262.7L304.3 263.3L309 263.5L312.7 262.1L314.3 260.1L318.5 258.6L321.2 258.1M216.3 332.1L221.7 331.8L222.2 331.2L242.6 331.2L245.4 333.1L251.9 332.9M188.2 337.8L190.6 337.3L192.6 337.3L197.6 338L203.4 338M176.9 -97.5L178.4 -99.4M354.7 351.2L354.7 342.1L354.9 336.1L354.6 336.1M310.9 208.6L310.9 208.4M224.8 65L223.7 63.1L214.3 54.7L213.7 51.5L212.1 46.4L210.6 43L209.7 39.1L209.1 37.8L208.9 28.7L207.1 26.3L205.8 25.1L200.7 23.1L198.3 20.7L196.1 19.6L194.4 16.7L194.3 15.3L198.2 13.5L201.5 10.8M179.3 266.7L180.5 262L180.2 248.6M232.7 100.3L230.3 99L227.8 97.9M235.1 164.3L240 165L241.5 166.2L243.3 169.6L246.5 171.6L247.4 173.1L249.6 175L251.3 175.7L253.2 175.8L259 177.3L261.9 177.7L267.3 179L271.9 181.7L283.5 181.7L286.2 183.3L289.4 183.3M327.8 434.6L333.9 439.7M1.1 -46.5L2.5 -46.5L8 -43.1L9.7 -43.1L11.3 -44.6L15.5 -45.3L19.5 -47.4L23.9 -48.5L31.5 -48.5L32.8 -48L37.6 -43.6L42.1 -39.9L50.5 -39.9L52.1 -39.1L63.3 -29.3L65.1 -28.3L68 -28.9L69.9 -28.6L81.1 -28.6L85.5 -27.8L91.9 -22.2L95.2 -19L96.2 -16.8L100.3 -14.4M119.4 38.3L126.3 47.1M124.2 192.5L125.2 187.3L126.9 186L128.8 185.5L130.2 183.9L132.4 182.9L134.6 180.7L137.9 175L139.6 170.8L142 167.7M162.7 -68.1L163.9 -70.8L169.3 -87.2L172.2 -90.9L172.3 -91.6L176.2 -96.8L176.9 -97.5M-89.2 -40.9L-87.7 -40.8L-83 -42.5L-80.6 -42.5L-78.9 -43.3M-92 -24.7L-90.1 -27.4L-90.5 -28.9L-89.9 -30.6L-90.4 -34.2L-89.3 -39.9L-88.9 -40.8M100.3 -14.4L100.6 -14.6M293.4 336L294 333.9L294 331.2L294.8 330.9L294.6 326.5L293.4 326.2L293.4 325L295.5 323M295.5 322.6L296.9 320.8M96.2 -61.2L96.2 -63.1L97 -65.6L97.1 -70.5L98.2 -74.4L92.2 -94.7L91.9 -96.5L92.2 -100.6L92.9 -101.2M162.6 173.5L160.4 171.3L159.3 169.1L155.1 164.7L153.8 163.7L142.1 156.2L141.2 155.5M123.3 130.7L122.1 130.4L121.9 129.4L120.3 129.4L119.8 123.4L117.9 121.3L117.4 120.1L113.3 117.2L110.4 114.7M141.4 140.7L140.5 139.3L140.3 134.8M277 282.8L279.1 281.7L281.3 281.6L284.1 283.4L285.9 284.1L290.1 288.2L291.8 290.9L294.3 293.7L294.5 296.6L297.9 305.1L298.9 308.8L299.1 311.5L298.6 314L298.8 317.1L296.9 320.8M162.9 -31.8L166.6 -31.8L170.2 -31.5M158.7 -31.8L162.6 -31.8M126.1 5.4L128.8 5.4M128.8 5.4L133 -1.6L134.3 -2.7L143.3 -10.2M216.1 332.1L216.3 332.1M174.9 129L172.8 128.2L171.6 126.8M240.6 50.1L242.7 49.5L243.6 50.1L246.5 50.6L248.7 50L250.8 47.8L253.8 47.1M146 57.9L149.7 57.9L154.5 54.5L156.6 54.4M223.6 129.5L228.1 129.5L231.4 127.8L236.6 127.7L240.5 128.2L245.7 128.3L250.5 130L252.2 131.7L261.9 131.4L266.1 130.7L269.9 130.7L271.1 129.9L274.9 129.7M174.9 129L180.4 129L182.6 129.7L186.2 130.4L194.7 130.4L196.2 130M140.3 134.8L144.5 134.8M127 198.6L128.2 199.1L150.9 199.1L152.7 200.3L156.2 200.3L159 202.7L160.8 204L168 204L169.2 203.5L174.6 203.9M321.1 232.9L319.4 232.9L295.7 232.8L282.8 232.4L279.7 229.4L276.8 228L273.1 228L270.5 226.5M86.9 196.6L89.9 196.6L99.7 195.2L101.6 195.2L105.3 196.3M171.1 279.6L174.7 281.2L176.7 281.6M107 254.5L112.7 254.7L117 256.2L121.6 256.4M174.9 344.3L182.3 339.4L188.2 337.8M203.4 338L208.9 337.8L213.7 333.8L214.8 332.3L216.1 332.1M354.6 336.1L354.3 335L354.6 328L353.8 323.5L354.4 320.4L354 317.1L351.7 312L351.6 309.3L348.4 300.3L346.6 299L345.3 295.8L342.5 292.1L339.2 289.7L336.9 285.6L334.2 283.3M341.1 439.5L341.6 437.2L341.6 434.1L343.5 431.1L345.3 424.2L345.7 420.8L345.6 411.3L346.6 410.1L346.2 402.9L347.8 402.5L348.4 399.7L348.1 397.5L349 395.4L349.8 391.4L351.4 377.9L352.3 376.4L352.3 371.6L352.9 368.4L353.4 367.6L353.2 364.7L354 361.7L354.7 351.2M334.2 283.3L333.9 281.1L332.7 277.4L327.5 267.2L327.4 254.5L327.1 252.9L326 250.8L325.3 248.1L323 242.7L323.2 241.9L321.1 235L321.1 232.9L320.3 232.8L317.6 222.8L313.4 213.7L311.7 210.6L310.9 208.6M310.9 208.4L310.6 207.4L306 196.6L304.6 194.2L303.3 190.3L301.8 188.2L300.9 185.6L298 179.4L296.9 178.5L297 177.5L295.8 173.8L294.3 170.6L291.9 164L291.3 163L289.8 158.3L287.6 154.4L286.2 149.6L284.6 146.6L283.7 142.2L283.2 138.3L281.6 134.9L280.4 130.4L280.1 127.5L279.2 124.3L279.2 122.3L278 121.9L275.8 117.9L274.3 114L273.5 109.8L271.6 103.2L271.9 102L274.4 99L275.9 97.9M275.9 97.9L274.9 94.9L274.9 93.4L271.9 85.8L271.1 83.6L268 78L266.5 73.8L264.7 70.4L263.1 69.1L262.6 66.2L260.2 60.8L253.5 46.6L250.8 44.9L249 42.9L243.2 38.1L241.2 35.8L240.3 33.2L236.8 30.2L234.4 26.5M234.2 26.5L233.5 25.8L233.8 18.9L233.6 16.8L232.3 13.8L231.7 11.4L232 9.9L231.2 4.2L228.8 -5.6L227.6 -13.2L227.6 -21.5L228.1 -22.5L227.5 -25.4L224.8 -30.3L215.4 -41.9L208.8 -49.4L203 -56.1L200.4 -60.9L196.1 -67.1L195.3 -68.6M154.8 312.5L156.2 311.6L158 312L159.8 311.1L161.1 309.6L164.1 307.9L164.1 296.4L164.5 295.4L169.8 290.2L172.5 285.6L174.7 279.2L176.8 272.5L179.3 266.7M180.2 248.6L179.2 246.8L179 244.4L177.2 235.6L177.8 228.4L178.6 227.7L179.8 223.5L179.8 217.4L178.7 216L178 213.5L177.1 207.8L176.9 202.9L178 200.5L180.8 198L186.2 192.7L187 191.5L186.5 187.1L187 181.6L189.2 180.6L192.8 179.9L195.6 180M227.8 97.9L227.8 95.4L229 92.5L230 87.8L230.2 82.2L229.7 79.9L229.6 71.2L224.9 66.3L224.8 65M220.3 131.6L220.5 129.7L223.6 129.5L223.4 122.1L223.7 120.7L225.8 117.4L227.2 113.8L227.6 111.1L231.1 107.2L232.7 103.7L232.7 100.3M201.5 10.8L201 7L200.3 6L199.2 6.4L195 5.7L194.4 5.2L193.5 -0.2L195.6 -4.8L196.1 -8.3L194 -12.7L193.5 -20.2L191.2 -26.4L192.8 -28.9L192.5 -31.8L191.5 -34.3L190.3 -35L189.1 -37.6L189.5 -47.9L190 -50.4L189.8 -54.8L189.2 -56.6L190.4 -61L189.8 -63.4L188 -65.4L188 -68L189.1 -69M103.7 243.1L103.5 241.5L102 239.3M205.5 154.5L212.4 154.5L214.2 157.7L221.7 157.7L225.7 160.6L226.6 162L229.9 164.3L235.1 164.3M126.3 47.1L127.5 49.5L130.5 50.8L133.1 53L135.2 53L138.2 54L141.5 55.7M73.9 23.9L75.7 25.5L84.4 25.5L91.7 25.3L95.8 28.5L100 30.7L114.3 35.4L117.3 35.4L119.4 38.3M-68.1 -83.7L-63.3 -82.2L-59.7 -82.5L-54.6 -81.1L-51.3 -81.6L-44.3 -79.4L-34.5 -80.5L-31.2 -80.3M-68.1 -83.7L-68.1 -85.9L-68.7 -86.9L-72.1 -89.2L-73 -90.8L-73.9 -91.4L-77.5 -95.7L-78.3 -96.3L-80.3 -100.4M107 267.9L107 262.5L106.7 257.9L107 252.9L105.8 251.7L103.7 250.5M103.8 246.3L108 246.1L109.1 245.3M142 167.7L142 166.2L141.1 164.5L141.2 155.5M145.9 56.9L144.8 52L144.8 40.2L145.3 39.8L147.6 35.1L149 32.7L149 27L150 22.8L149.7 19.7L150.2 16.7L151.5 12.3L145.9 -2.4L145.9 -7L143.3 -9.5L143.3 -14.7L144.5 -17.6L145 -20.2L146 -21.7L146.7 -24.4L148.5 -26.4L151.4 -36L152.4 -37.9L153.5 -40.8L153.8 -43.5L155.7 -48L157.7 -54.1L161.7 -66.1L161.7 -68.1M-62.7 -82.2L-62.9 -86.4L-65 -91.3L-64.1 -92.3L-62 -97.2L-60.2 -99M103.7 250.5L103.5 243.4L104.4 241.7L105.9 239.8L106.1 233.3L112.1 228.7L114.9 225.5L116.5 225L116.7 222.4L120.6 218.7L121.6 216.7L121.8 209.3L121.3 206.9L119.8 204L119.8 195.8M179.5 382.4L179.2 375L178.7 371.5L178.9 368.1L176.7 365.2L175.6 362.8L174.6 361.7L172.9 358.6L172.8 345.6L171.4 343.2L169.9 341.4L169.9 338.5L169.3 336.1L166.6 330.6L161.1 321.1L158.9 318.7L155.6 314.9L155.3 312.7L152.4 308.9L146.6 304.4L144.2 303L141.4 302.9L139.4 301.3L135.7 300L131.5 299.7L130 300.3L127.9 299.5L119.2 299.5L117.4 296.8L116.5 293.4L114.8 291.5L114.6 290.4L112.4 286.3L111 282.9L110.9 280.2L110.4 278.9L107 274.8L107 267.9M179.5 382.4L179.8 384.6L180.1 398.7L180.5 402L183.4 403.7L187.9 409.3L190.1 411M171.3 98.8L172.3 99.8L174.7 100.3L178.1 98.1L182.2 99.5L186.7 100.6L187.9 99.3L191.3 99.1L192.6 99.5L196.2 99L197.4 100.5L197.6 106.7L198.6 108.8L201.5 111.6L202.4 113L207.3 115L208.8 116L210.3 116L214.2 119.4L215.5 121.9L218.1 124.1L220.5 129.7M144.8 40.2L144.2 39.8L142.3 36.4L139.3 33.7L137.8 29.9L137.8 26.5L132.5 21.4L130.9 20.9L129.1 19.4L129.1 18.5L126.9 16L125.8 10.8L126 9.6M126 9.6L126.1 8.6L126.1 0.1L122.1 -3.8L119.5 -7L109.5 -11.4L104.1 -12.5L101.2 -13.9L100.6 -14.6M96.4 -55.3L96.2 -61.2M289.4 183.3L298.2 183.3L299.7 183.1M91.1 -54.3L93.1 -54.1L95 -55.3L99.7 -55M251.6 59.6L252.9 57.4L257.7 55.2M164.2 185.8L166 186L168.3 186.6L174.1 186.6L179.8 185.3L181.9 185.5L186.8 183.6M93.7 208.8L95.5 207.6L97.1 207.2L106.8 204.2L109.4 203.9M275 277.5L277 277.5L277 282.8M164.2 185.8L164.2 184.1L162.6 181.7L162.6 173.5M141.2 155.5L141.2 152L141.7 151.3L140.8 149.1L140.5 146.6L140.9 145.4L140.9 142.5L141.4 140.7M140.3 134.8L137.9 132.9L129.3 132.9L126.3 131.6L123.3 130.7M109.2 113.7L104.7 110.4M110.4 114.7L109.2 113.7","cities":[["Tampa",27.949,-82.461,2314000],["Fort Lauderdale",26.136,-80.142,2042042],["Orlando",28.511999999999997,-81.382,1350000],["West Palm Beach",26.745,-80.124,1250000],["Jacksonville",30.331999999999997,-81.672,988000],["St. Petersburg",27.771,-82.679,800313],["Sarasota",27.336,-82.531,589959],["Miami Beach",25.81,-80.132,407750],["Sanford",28.79,-81.28,333460],["Melbourne",28.083000000000002,-80.608,265414],["Naples",26.142,-81.795,262306],["Coral Springs",26.271,-80.271,250000],["Fort Pierce",27.447,-80.32600000000001,228245],["Kissimmee",28.291999999999998,-81.408,225494],["Tallahassee",30.45,-84.28,221222],["Daytona Beach",29.211,-81.023,216890],["Gainesville",29.651,-82.325,191097],["Ft. Myers",26.64,-81.86,188606],["Ocala",29.186999999999998,-82.14,141382],["Cape Coral",26.603,-81.98,132489],["Spring Hill",28.479,-82.54799999999999,114697],["Winter Haven",28.022,-81.733,108932],["Vero Beach",27.642,-80.391,86039],["St. Augustine",29.895,-81.315,76331],["Port Charlotte",27,-82.10600000000001,64279],["Titusville",28.612,-80.808,52311],["Leesburg",28.811,-81.883,49574],["Palm Coast",29.538,-81.223,48577],["Lake City",30.19,-82.64,29395],["Palatka",29.648000000000003,-81.65100000000001,21452]]};</script>
+<script>
+/* ---------- data ---------- */
+var DAYS=[
+{id:'d1',date:'2026-12-24',w:'周四',md:'12/24',title:'落地坦帕，开去奥兰多',city:'奥兰多',stay:'EVEN Hotel Orlando Universal Blvd',path:['TPA','ORL'],
+ items:[
+ {t:'09:00',h:'提醒：买肯尼迪航天中心门票',tag:'todo',d:'12/27 下午场的票，官网提前买。成人 77 美元加税。'},
+ {t:'12:30',h:'WN3614 PIT 起飞',tag:'booked',d:'西南航空 3614，Economy。匹兹堡直飞坦帕，飞行 2 小时 25 分，14:55 落地。'},
+ {t:'14:55',h:'落地 TPA，取行李，取租车',tag:'booked',tg:'租车已订',addr:'Tampa International Airport',d:'三段酒店之间全靠开车，租车已订好。取车时看一眼还车时间和地点（1/1 在 TPA 还）。'},
+ {t:'约 16:00',h:'出发去奥兰多',d:'TPA 到 EVEN 约 85 英里，正常 1.5-2 小时。圣诞前夜 I-4 可能堵，预留 2.5 小时。'},
+ {t:'晚上',h:'晚餐：Spicy Girl 辣妹子',tag:'todo',tg:'先确认营业',addr:'5748 International Dr, Orlando',d:'川菜，离 EVEN 开车约 5 分钟。平常周四营业 11:30-22:00，圣诞前夜营业时间可能有变，去之前先确认还开着。'},
+ {t:'饭后',h:'入住 EVEN Hotel Orlando',addr:'9685 Universal Blvd, Orlando',d:'2026 年新开，Expedia 9.4 分，24 小时健身房和泳池都有。楼下有 7-11，对面是 Walgreens。酒店没有去乐园的班车，这几天靠自驾或打车。早点休息，第二天开始才是正片。'}
+ ]},
+{id:'d2',date:'2026-12-25',w:'周五',md:'12/25',title:'Silver Springs 透明皮划艇日',city:'奥兰多',stay:'EVEN Hotel Orlando Universal Blvd',path:['ORL','SS','ORL'],
+ note:'圣诞节当天 EPCOT 全年最挤，肯尼迪航天中心当天关门，所以这天去划透明皮划艇，晚上回 Disney Springs 吃饭。',
+ items:[
+ {t:'09:00',h:'提醒：先确认开门的咖啡店',d:'圣诞节很多店关门或缩短营业时间，出发前先买好早餐，别等到公园附近再找吃的。'},
+ {t:'11:30',h:'从奥兰多出发去 Silver Springs',addr:'Silver Springs State Park, Ocala',d:'约 1.5 小时。带水、防晒霜和薄外套。免责表出发前在确认邮件里填好。'},
+ {t:'13:00 前',h:'到公园签到',d:'提前 30 分钟签到。公园门票 2 美元/人，现场另付，不含在团费里。'},
+ {t:'13:30-15:30',h:'Clear Kayak Tour',tag:'booked',d:'2 小时向导带队，1 条双人透明艇坐 2 人（合计限重 400 磅）。总价 113.50 美元含税费。冬天是海牛季，能看泉水下的鱼、海龟和水草。'},
+ {t:'约 17:30',h:'回奥兰多，逛 Disney Springs',addr:'1486 East Buena Vista Drive, Orlando',d:'停车免费。Christmas Tree Stroll 免费，开放到 23:30。'},
+ {t:'19:15',h:'晚餐：Morimoto Asia',tag:'booked',addr:'Disney Springs, Orlando',d:'米其林推荐日料，就在 Disney Springs 里。逛完圣诞树正好走过去。'},
+ {t:'睡前',h:'备好 26 号 EPCOT 的东西',d:'门票和 Premier Pass 都关联在 App 里，充电宝充满，定好 7:00 的闹钟。'}
+ ]},
+{id:'d3',date:'2026-12-26',w:'周六',md:'12/26',title:'EPCOT 全天（核心日）',city:'奥兰多',stay:'EVEN Hotel Orlando Universal Blvd',path:['ORL'],
+ note:'正赶上 Festival of the Holidays（11/27-12/30）：各国展馆有节日故事讲述和 Holiday Kitchens 节日小吃摊。公布的开园时间 9:00-21:00。',
+ warn:'Premier Pass 每个项目只能用一次，想二刷热门项目只能排普通队。Guardians 上午先玩，下午人最多。26 号早上先打开 App 复核开园和演出时间。',
+ items:[
+ {t:'07:45',h:'从 EVEN 出发',d:'开车到 EPCOT 约 20-25 分钟，圣诞周入园车流和安检都慢，宁可早到。'},
+ {t:'08:30',h:'到停车场',d:'EVEN 不是迪士尼酒店，没有提前半小时入园。目标是 9:00 开门第一批进去。'},
+ {t:'09:00-11:30',h:'前半场硬菜',tag:'todo',tg:'需 Pass',d:'Guardians of the Galaxy: Cosmic Rewind（最热门，优先）、Test Track、Mission: SPACE、Spaceship Earth。都在入口一侧，顺路一次走完。'},
+ {t:'11:30-13:30',h:'World Showcase 边吃边逛',d:'各国 Holiday Kitchens 是节日限定小吃摊，小份多样，适合放牧式午餐。从墨西哥或加拿大一侧开始绕湖，别在第一家吃饱。'},
+ {t:'13:30-16:30',h:'下午刷剩下的大项目',tag:'todo',tg:'需 Pass',d:'Remy 的 Ratatouille Adventure（法国馆）、Frozen Ever After（挪威馆）、Soarin Around the World、Living with the Land。中间穿插各国节日表演，累了找个咖啡馆坐一会。'},
+ {t:'16:30-18:00',h:'晚餐提前吃',d:'避开饭点人潮，也给晚上演出留时间。'},
+ {t:'18:30',h:'Candlelight Processional',d:'America Gardens Theatre（美国馆）。明星朗诵圣诞故事，配 50 人管弦乐团和大型合唱团。每晚三场：16:45、18:30、20:00，选 18:30 最均衡。免费座位先到先得，至少提前 45 分钟排队。想保证有座可以订 Candlelight 餐饮套餐。'},
+ {t:'约 21:00',h:'Luminous 烟花水舞秀',d:'在 World Showcase Lagoon 湖边看。时间说法在 21:00-21:15 之间，以 App 为准。看完随人流出园，开车回酒店约 25 分钟。'}
+ ]},
+{id:'d4',date:'2026-12-27',w:'周日',md:'12/27',title:'Briarpatch 午餐 + 肯尼迪航天中心',city:'奥兰多',stay:'EVEN Hotel Orlando Universal Blvd',path:['ORL','WP','KSC','ORL'],
+ warn:'这一天的顺序别反。Briarpatch 排队时间没法预估，午餐拖晚，下午场就只剩两三个小时。圣奥古斯丁 Nights of Lights 这次已经取消。',
+ items:[
+ {t:'11:00 前后',h:'午餐：Briarpatch Restaurant',tag:'todo',tg:'现场排队',addr:'252 N Park Ave, Winter Park',d:'不接受预订，只能现场排队，周日营业 8:00-17:00。11:00 前后到 Winter Park，别拖到下午。'},
+ {t:'约 14:00',h:'Kennedy Space Center Visitor Complex',tag:'todo',tg:'待买票',addr:'Space Commerce Way, Merritt Island, FL 32953',d:'从 Winter Park 开车约 1 小时。12/26-30 营业 9:00-19:00。一日票成人 77 美元加税，停车 15 美元。进门先坐 Bus Tour 去 Apollo/Saturn V Center（末班巴士为闭园前 2.5 小时），再看 Space Shuttle Atlantis 和 Gateway。'},
+ {t:'18:50',h:'Holidays in Space 无人机秀',d:'看完再走。之后开车回奥兰多约 1 小时，晚上收拾行李，明天退房搬去海边。'}
+ ]},
+{id:'d5',date:'2026-12-28',w:'周一',md:'12/28',title:'搬去清水湾看海',city:'清水湾',stay:'Wyndham Grand Clearwater Beach',path:['ORL','CLW'],
+ note:'费用备忘：Wyndham 度假费每晚 35 美元（含税 39.55），含沙滩椅伞、迎宾饮料、WiFi、健身房。停车只有代客泊车，每晚 42 美元加税。两晚附加费约 163 美元。',
+ items:[
+ {t:'上午',h:'EVEN 退房，开车去清水湾',d:'约 100 英里、2 小时左右，走 I-4 转 I-275。'},
+ {t:'中午前后',h:'入住 Wyndham Grand Clearwater Beach',addr:'100 Coronado Dr, Clearwater Beach',d:'就在沙滩对面，步行几分钟到 Pier 60。泳池区翻修中，泳池和 hot tub 关闭到 2027 年 1 月中，海滩和 Spa 正常。'},
+ {t:'下午',h:'下海滩',d:'度假费包含每天 2 把沙滩椅加 1 把伞，直接去沙滩上领。'},
+ {t:'16:00',h:'Sunsets at Pier 60',addr:'Pier 60, Clearwater Beach',d:'每晚日落前 2 小时开始的免费庆典，有街头艺人、手作摊和音乐。12 月底日落约 17:40。'},
+ {t:'18:00',h:'晚餐：Sea-Guini',tag:'booked',tg:'已订位',addr:'430 S Gulfview Blvd, Clearwater Beach',d:'Opal Sands Resort 内，意大利风海鲜，晚餐 17:00-22:00。订位已完成，别忘了确认是否备注了户外露台，日落刚过还能看到余晖。'}
+ ]},
+{id:'d6',date:'2026-12-29',w:'周二',md:'12/29',title:'清水湾海滩 + Little Toot 看海豚',city:'清水湾',stay:'Wyndham Grand Clearwater Beach',path:['CLW'],
+ items:[
+ {t:'上午',h:'海滩散步或去海洋水族馆',addr:'Clearwater Marine Aquarium',d:'睡到自然醒。想看海洋动物可以去 Clearwater Marine Aquarium（离酒店约 1.1 英里），以救助海豚海龟为主，半天足够。下午不再安排圣彼得堡，节奏放慢。'},
+ {t:'14:15 前',h:'到 Clearwater Beach 码头',addr:'25 Causeway Blvd, Clearwater Beach',d:'提前 45 分钟到，办票和停车。船不等迟到的人。'},
+ {t:'15:00-16:10',h:'Little Toot II Dolphin Tour',tag:'booked',d:'船程约 70 分钟，2 位成人，总价 61.26 美元含税费。没看到海豚的话，一年内下次免费再坐一次。'},
+ {t:'16:10 后',h:'Pier 60 看日落',d:'日落约 17:40，参加日落庆典。'},
+ {t:'晚上',h:'晚餐：Frenchy\'s Saltwater Cafe',d:'清水湾本地海鲜馆。'},
+ {t:'饭后',h:'Coco\'s Crush Bar 喝一杯',addr:'317 Coronado Dr, Clearwater Beach',d:'Original 店，离 Wyndham 和 Pier 60 很近。每晚有现场音乐，营业到凌晨 2:00。'}
+ ]},
+{id:'d7',date:'2026-12-30',w:'周三',md:'12/30',title:'搬去坦帕，下午去水族馆',city:'坦帕',stay:'The Tampa EDITION',path:['CLW','TPD'],
+ items:[
+ {t:'上午',h:'Wyndham 退房，开车去坦帕市中心',d:'约 25 英里、45 分钟。先在清水湾吃完早饭。'},
+ {t:'12:00',h:'入住 The Tampa EDITION',addr:'500 Channelside Drive, Tampa, FL 33602',d:'按预订可以中午 12:00 入住。酒店在 Water Street 区，出门就是餐厅和酒吧。每天另收 destination fee，停车只有代客泊车，费用以确认单为准。'},
+ {t:'12:30',h:'The Florida Aquarium',tag:'booked',tg:'已买票',addr:'701 Channelside Dr, Tampa',d:'离 EDITION 步行约 5 分钟，留 2-3 小时。门票已买，定时入场，按票上的时间到。12/29-31 营业时间可能调整，去之前在 flaquarium.org 复核。'},
+ {t:'傍晚',h:'回酒店休息，Riverwalk 散步'},
+ {t:'19:00',h:'晚餐：Aji Limo Peruvian Cuisine',tag:'booked',addr:'3306 W Spruce St D, Tampa',d:'秘鲁菜，招牌是 Ceviche 和 Lomo Saltado。不在市中心，开车约 15 分钟，从 Riverwalk 走不过去。饭后早点休息，明天跨年要留体力。'}
+ ]},
+{id:'d8',date:'2026-12-31',w:'周四',md:'12/31',title:'坦帕跨年夜',city:'坦帕',stay:'The Tampa EDITION',path:['TPD'],
+ note:'这晚人在坦帕，所以奥兰多 Thornton Park 橙球落球这次不去了。Riverwalk 烟花离酒店步行可达，更省事。',
+ items:[
+ {t:'白天',h:'睡个懒觉，轻松逛',d:'Riverwalk、Hyde Park Village，或者去 Ybor City 古巴区吃午饭。下午回酒店休息，养精蓄锐。'},
+ {t:'19:15',h:'晚餐：Rocca Tampa',tag:'booked',addr:'323 W Palm Ave, Tampa Heights',d:'米其林星级意大利菜，手工意面和桌边现做 mozzarella 是招牌。从 EDITION 开车约 10 分钟。'},
+ {t:'21:00',h:'跨年选项 A：Riverwalk 看烟花',d:'Friends of the Tampa Riverwalk 的烟花在午夜 12:00 于 Tampa Convention Center 水域上空燃放，免费。Jackson\'s Bistro 一带和 Harbour Island 桥边是好位置。VIP 观景区在 Jackson\'s 二楼露台 21:00-01:00，单独售票。'},
+ {t:'21:00',h:'跨年选项 B：EDITION 屋顶派对',d:'往年 21:00-02:00，售票，含小食和鸡尾酒，不出酒店就能倒数。'},
+ {t:'午夜',h:'倒数，新年快乐 🎆',d:'从 Rocca 吃完开车回市区约 10 分钟，赶午夜烟花时间足够。'}
+ ]},
+{id:'d9',date:'2027-01-01',w:'周五',md:'1/1',title:'睡到自然醒，晚上飞回家',city:'坦帕',stay:'退房离开',path:['TPD','TPA'],
+ items:[
+ {t:'上午',h:'EDITION 吃 brunch',d:'跨年后睡个懒觉。退房时间以预订为准，行李可以先寄存在前台。'},
+ {t:'下午',h:'Riverwalk 走一圈或 Sparkman Wharf',d:'最后逛一逛，在 Sparkman Wharf 吃个早晚餐。还车点如果设在 TPA，顺路一次搞定。'},
+ {t:'17:30 前',h:'到坦帕国际机场 TPA',addr:'Tampa International Airport',d:'EDITION 到机场开车约 15 分钟。元旦当天路上和安检都可能慢，按 17:30 到机场留足余量。'},
+ {t:'19:30',h:'WN4277 飞回匹兹堡',tag:'booked',d:'西南航空直飞，约 22:00 落地。以实际出票为准。'}
+ ]}
+];
+
+var PLACES={
+ TPA:{n:'TPA',lat:27.975,lon:-82.533,dx:-8,dy:-10,a:'end'},
+ TPD:{n:'坦帕',lat:27.945,lon:-82.455,dx:10,dy:14,a:'start'},
+ CLW:{n:'清水湾',lat:27.98,lon:-82.83,dx:-10,dy:-8,a:'end'},
+ ORL:{n:'奥兰多',lat:28.43,lon:-81.47,dx:-12,dy:18,a:'end'},
+ SS:{n:'Silver Springs',lat:29.216,lon:-82.05,dx:12,dy:4,a:'start'},
+ WP:{n:'Winter Park',lat:28.6,lon:-81.35,dx:12,dy:-4,a:'start'},
+ KSC:{n:'肯尼迪航天中心',lat:28.52,lon:-80.68,dx:6,dy:22,a:'end'}
+};
+var LAND=[[29.7,-83.45],[29.14,-83.05],[28.9,-82.7],[28.3,-82.75],[28.02,-82.82],[27.8,-82.8],[27.6,-82.72],[27.2,-82.5],[27.2,-80.3],[27.8,-80.4],[28.4,-80.55],[28.8,-80.8],[29.3,-81.0],[29.7,-81.2]];
+var STAYS=[
+ {d:'12/24<br>-28',n:'EVEN Hotel Orlando Universal Blvd',a:'9685 Universal Blvd, Orlando',t:'4 晚 · 2026 年新开，24 小时健身房和泳池，楼下 7-11，对面 Walgreens。没有乐园班车。',day:'d1'},
+ {d:'12/28<br>-30',n:'Wyndham Grand Clearwater Beach',a:'100 Coronado Dr, Clearwater Beach',t:'2 晚 · 沙滩对面，步行几分钟到 Pier 60。泳池区翻修，泳池和 hot tub 关到 2027 年 1 月中。度假费 35 美元/晚，代客泊车 42 美元/晚。',day:'d5'},
+ {d:'12/30<br>-1/1',n:'The Tampa EDITION',a:'500 Channelside Drive, Tampa, FL 33602',t:'2 晚 · 12:00 可入住，Water Street 区，步行去水族馆和 Riverwalk。另收 destination fee，仅代客泊车。',day:'d7'}
+];
+var DRIVES=[['TPA → 奥兰多','1.5-2 小时'],['EVEN → EPCOT','20-25 分钟'],['奥兰多 → 肯尼迪','约 1 小时'],['奥兰多 → Silver Springs','约 1.5 小时'],['奥兰多 → 清水湾','约 2 小时'],['清水湾 → 坦帕市中心','约 45 分钟'],['EDITION → TPA','约 15 分钟'],['TPA ↔ EVEN 距离','约 85 英里']];
+
+var TICKETS=[
+ {s:'booked',h:'Silver Springs Clear Kayak Tour',dt:'12/25 周五 · 13:30-15:30',p:'双人透明艇 2 人，总价 $113.50 含税费。公园门票 $2/人现场另付。出发前填好确认邮件里的免责表，11:30 从奥兰多出发，13:00 前签到。'},
+ {s:'booked',h:'Morimoto Asia',dt:'12/25 周五 · 19:15 · Disney Springs',p:'米其林推荐日料，已订位。'},
+ {s:'booked',h:'Little Toot II Dolphin Tour',dt:'12/29 周二 · 15:00-16:10',p:'2 位成人，总价 $61.26 含税费。14:15 前到 Clearwater Beach 码头（25 Causeway Blvd）办票和停车。没看到海豚一年内下次免费。'},
+ {s:'booked',h:'Aji Limo Peruvian Cuisine',dt:'12/30 周三 · 19:00',p:'3306 W Spruce St D, Tampa。开车或打车去。'},
+ {s:'booked',h:'Rocca Tampa',dt:'12/31 周四 · 19:15',p:'323 W Palm Ave, Tampa Heights。米其林星级意大利菜。'},
+ {s:'booked',h:'三家酒店',dt:'EVEN 12/24-28 · Wyndham 12/28-30 · EDITION 12/30-1/1',p:'各看一眼取消政策和入住时间。Wyndham 和 EDITION 的附加费都不含在房价里。'},
+ {s:'booked',h:'租车',dt:'12/24 TPA 取车 · 1/1 TPA 还车',p:'已订。三段行程全靠它，取车和还车时间看一下确认单。'},
+ {s:'booked',h:'EPCOT 门票',dt:'12/26 周六',p:'已买。记得关联到 My Disney Experience，这是买 Premier Pass 的前提。'},
+ {s:'todo',h:'Lightning Lane Premier Pass',dt:'12/23 07:00 开售（美东）',p:'提前 3 天窗口。闹钟设在 12/22 21:00 和 12/23 06:50。近期最高到过每人 $269 加税。'},
+ {s:'todo',h:'肯尼迪航天中心门票',dt:'12/27 周日 · 下午场',p:'官网提前买，成人 $77 加税，停车 $15 现场付。买票提醒设在 12/24 09:00。'},
+ {s:'booked',h:'The Florida Aquarium 门票',dt:'12/30 周三 · 下午',p:'已买，定时入场。去之前在官网复核 12/29-31 营业时间。'},
+ {s:'booked',h:'Sea-Guini 订位',dt:'12/28 周一 · 18:00',p:'已订。确认一下是否备注了户外露台。'},
+ {s:'booked',h:'机票',dt:'去程 12/24 12:30 PIT → TPA 14:55 · 回程 1/1 19:30 TPA → PIT',p:'都已订。去程西南航空 WN3614（Economy，飞行 2h25m），回程 WN4277 直飞，约 22:00 落地。'},
+ {s:'info',h:'Spicy Girl 辣妹子',dt:'12/24 周四 · 晚餐',p:'不用订位，出发前确认圣诞前夜营业时间。'},
+ {s:'info',h:'Briarpatch Restaurant',dt:'12/27 周日 · 11:00 前后',p:'不接受预订，现场排队，周日 8:00-17:00。'},
+ {s:'info',h:'跨年票（可选）',dt:'12/31 周四',p:'默认 Rocca 吃完回 Riverwalk 免费看烟花。想去 EDITION 屋顶派对或 Jackson\'s VIP 观景区再单独买票。'}
+];
+var BUDGET=[
+ {id:'kayak',n:'透明皮划艇',s:'已订 · 2 人含税费',lo:113.5,hi:113.5,on:1,booked:1},
+ {id:'dolphin',n:'海豚船 Little Toot II',s:'已订 · 2 人含税费',lo:61.26,hi:61.26,on:1,booked:1},
+ {id:'ss',n:'Silver Springs 公园门票',s:'$2 × 2 人，现场付',lo:4,hi:4,on:1},
+ {id:'ksc',n:'肯尼迪门票',s:'$77 × 2，不含税',lo:154,hi:154,on:1},
+ {id:'kscp',n:'肯尼迪停车',s:'现场付',lo:15,hi:15,on:1},
+ {id:'aq',n:'Florida Aquarium 门票',s:'$33-42 × 2',lo:66,hi:84,on:1},
+ {id:'ll',n:'Lightning Lane Premier Pass',s:'按最高 $269 × 2，加税',lo:538,hi:538,on:1},
+ {id:'wyn',n:'Wyndham 附加费（两晚）',s:'度假费 + 代客泊车',lo:163,hi:163,on:1},
+ {id:'fl',n:'回程机票 WN4277',s:'已买 · 档位按实际选，每人 × 2 人',fare:1,on:1}
+];
+var CHECK=[
+ ['car','租车：12/24 TPA 取，1/1 TPA 还','已订'],
+ ['epcot','确认 EPCOT 门票已关联 My Disney Experience','票已买，Premier Pass 的前提'],
+ ['ll','抢 Lightning Lane Premier Pass','12/23 07:00 开售，闹钟 12/22 21:00 和 12/23 06:50'],
+ ['ksc','买肯尼迪航天中心门票','12/27 下午场，12/24 09:00 有提醒'],
+ ['aq','买 Florida Aquarium 门票','12/30，已买'],
+ ['sea','订 Sea-Guini','12/28 18:00，已订，确认备注户外露台'],
+ ['fl','订机票','去程 12/24 WN3614，回程 1/1 WN4277，已订'],
+ ['waiver','填皮划艇免责表','在确认邮件里填'],
+ ['hotel','检查三家酒店确认单','取消政策、入住时间、附加费'],
+ ['spicy','确认 Spicy Girl 圣诞前夜营业','12/24'],
+ ['nye','决定跨年方式','Riverwalk 免费 或 买票']
+];
+var PACK=[['coat','厚外套、薄羽绒或防风衣','早晚 10 度出头，海边风大'],['sun','防晒和泳衣','清水湾两天下海'],['shoes','最舒服的鞋','EPCOT 走路量大'],['bank','充电宝','EPCOT 要靠 App'],['water','水和薄外套','皮划艇日带']];
+var REM=[['12/22 21:00','先定闹钟，准备抢 Premier Pass'],['12/23 06:50','起床；07:00 开售 12/26 的票'],['12/24 09:00','买肯尼迪航天中心门票'],['12/25 09:00','确认开门的咖啡店，买早餐'],['12/26 早上','打开 App 复核 EPCOT 开园和演出时间'],['12/31','看 Riverwalk 活动页确认烟花安排']];
+
+/* ---------- helpers ---------- */
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+function store(k,v){try{if(v===undefined){return JSON.parse(localStorage.getItem(k))}localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}}
+function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove('on')},1600)}
+var PLQ={'Tampa International Airport':'Tampa International Airport','5748 International Dr, Orlando':'Spicy Girl Orlando','9685 Universal Blvd, Orlando':'EVEN Hotel Orlando Universal Blvd','Silver Springs State Park, Ocala':'Silver Springs State Park','1486 East Buena Vista Drive, Orlando':'Disney Springs','Disney Springs, Orlando':'Morimoto Asia Disney Springs','252 N Park Ave, Winter Park':'Briarpatch Restaurant Winter Park','Space Commerce Way, Merritt Island, FL 32953':'Kennedy Space Center Visitor Complex','100 Coronado Dr, Clearwater Beach':'Wyndham Grand Clearwater Beach','Pier 60, Clearwater Beach':'Pier 60 Clearwater Beach','430 S Gulfview Blvd, Clearwater Beach':'Sea-Guini Opal Sands Clearwater Beach','Clearwater Marine Aquarium':'Clearwater Marine Aquarium','25 Causeway Blvd, Clearwater Beach':'Clearwater Beach Marina 25 Causeway Blvd','317 Coronado Dr, Clearwater Beach':'Coco\'s Crush Bar Clearwater Beach','500 Channelside Drive, Tampa, FL 33602':'The Tampa EDITION','701 Channelside Dr, Tampa':'The Florida Aquarium Tampa','3306 W Spruce St D, Tampa':'Aji Limo Peruvian Cuisine Tampa','323 W Palm Ave, Tampa Heights':'Rocca Tampa Heights'};
+function pq(a){return PLQ[a]||a}
+function maps(q){return 'https://maps.apple.com/?q='+encodeURIComponent(q)}
+function navTo(b,a){return 'https://maps.apple.com/?'+(a?'saddr='+encodeURIComponent(a)+'&':'')+'daddr='+encodeURIComponent(b)+'&dirflg=d'}
+function copy(txt){
+  var done=function(){toast('已复制地址')};
+  try{navigator.clipboard.writeText(txt).then(done,function(){toast('复制失败，请长按选择')})}catch(e){toast('复制失败，请长按选择')}
+}
+function money(n){return '$'+n.toLocaleString('en-US',{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2})}
+function badge(tag,txt){var m={booked:['b-booked','已订'],todo:['b-todo','待办'],info:['b-info','提示']}[tag];return '<span class="badge '+m[0]+'">'+(txt||m[1])+'</span>'}
+
+/* ---------- countdown ---------- */
+var T_LAND=new Date('2026-12-24T14:55:00-05:00'), T_END=new Date('2027-01-01T19:30:00-05:00'), T_LL=new Date('2026-12-23T07:00:00-05:00');
+function fmt(ms){var s=Math.floor(ms/1000),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60);return d+'d '+h+'h '+m+'m'}
+function tick(){
+  var now=new Date(),cd=$('#cd');
+  if(now<T_LAND)cd.textContent='Wheels down in '+fmt(T_LAND-now);
+  else if(now<T_END)cd.textContent='Trip underway · flight home in '+fmt(T_END-now);
+  else cd.textContent='Welcome home ♡';
+  var ll=$('#cdLL');
+  ll.textContent=now<T_LL?'Premier Pass drops in '+fmt(T_LL-now):'Pass is live, check if you got it';
+}
+tick();setInterval(tick,1000);
+
+/* ---------- map ---------- */
+var MW=340,MH=283,BND={x0:-100,y0:-102,x1:380,y1:441};
+var POI=[
+ {n:'EPCOT',lat:28.375,lon:-81.549,pop:0,z:2.8},{n:'Disney Springs',lat:28.371,lon:-81.519,pop:0,z:2.8}
+];
+var EXTRA=[['Clearwater',27.97,-82.80,115000],['Lakeland',28.04,-81.95,110000],['Winter Park',28.60,-81.34,30000],['Apopka',28.68,-81.51,52000],['Clermont',28.55,-81.77,45000],['St Cloud',28.25,-81.28,50000],['Plant City',28.02,-82.12,40000],['Brandon',27.94,-82.29,115000],['Dunedin',28.02,-82.77,36000],['Largo',27.91,-82.79,84000],['Titusville',28.61,-80.81,46000],['Cocoa Beach',28.32,-80.61,11000],['Merritt Island',28.54,-80.67,34000],['Cape Canaveral',28.40,-80.61,10000],['The Villages',28.93,-81.96,79000],['Leesburg',28.81,-81.88,24000],['Deltona',28.90,-81.26,93000],['Riverview',27.87,-82.33,100000],['Zephyrhills',28.23,-82.18,17000],['Dade City',28.36,-82.20,7000],['Tarpon Springs',28.15,-82.76,25000],['Bradenton',27.50,-82.57,57000],['Haines City',28.11,-81.62,27000],['Davenport',28.16,-81.60,5000],['Windermere',28.50,-81.53,3000],['Oldsmar',28.03,-82.66,14000],['Crystal River',28.90,-82.59,3000],['Brooksville',28.55,-82.39,8000],['Lake Wales',27.90,-81.59,17000],['Bartow',27.90,-81.84,19000],['Sebring',27.50,-81.44,10000],['Palm Bay',28.03,-80.59,119000],['Port Orange',29.14,-81.01,64000],['Mount Dora',28.80,-81.64,16000],['Eustis',28.85,-81.69,22000],['Altamonte Springs',28.66,-81.37,43000],['Oviedo',28.67,-81.21,40000],['Pinellas Park',27.84,-82.70,53000],['Seminole',27.84,-82.79,18000],['Safety Harbor',28.00,-82.69,17000],['Ruskin',27.72,-82.43,25000]];
+function pxy(lat,lon){return [(lon+83.6)*100,(29.7-lat)*113]}
+function px(p){return pxy(p.lat,p.lon)}
+function clampView(v){
+  v.vw=Math.max(60,Math.min(470,v.vw));var vh=v.vw*MH/MW;
+  v.cx=Math.max(BND.x0+v.vw/2,Math.min(BND.x1-v.vw/2,v.cx));
+  v.cy=Math.max(BND.y0+vh/2,Math.min(BND.y1-vh/2,v.cy));
+  return v;
+}
+function fitView(keys){
+  var xs=[],ys=[];
+  keys.forEach(function(k){var c=px(PLACES[k]);xs.push(c[0]);ys.push(c[1])});
+  var x0=Math.min.apply(null,xs),x1=Math.max.apply(null,xs),y0=Math.min.apply(null,ys),y1=Math.max.apply(null,ys);
+  var vw=Math.max(x1-x0+90,(y1-y0+90)*MW/MH,110);
+  return clampView({cx:(x0+x1)/2,cy:(y0+y1)/2,vw:vw});
+}
+function tw(str,fs){var w=0;for(var i=0;i<str.length;i++)w+=str.charCodeAt(i)>255?fs:fs*.56;return w}
+var CITYSKIP={Tampa:1,Orlando:1,Clearwater:1,'Winter Park':1};
+function mapSVG(path,v){
+  var k=v.vw/MW,vh=v.vw*MH/MW,z=MW/v.vw;
+  var vx0=v.cx-v.vw/2,vy0=v.cy-vh/2;
+  var s='<svg viewBox="'+vx0.toFixed(1)+' '+vy0.toFixed(1)+' '+v.vw.toFixed(1)+' '+vh.toFixed(1)+'" xmlns="http://www.w3.org/2000/svg" style="touch-action:pan-y">';
+  if(window.GEO){
+    s+='<path class="land" d="'+GEO.land+'"/><path class="urban" d="'+GEO.urban+'"/><path class="park" d="'+GEO.parks+'"/><path class="lake" d="'+GEO.lakes+'"/>';
+    s+='<path class="rdm" d="'+GEO.roadsMinor+'"/><path class="rcase" d="'+GEO.roadsMajor+'"/><path class="rd" d="'+GEO.roadsMajor+'"/>';
+  }else{
+    s+='<polygon class="land" points="'+LAND.map(function(c){var p=pxy(c[0],c[1]);return p[0].toFixed(1)+','+p[1].toFixed(1)}).join(' ')+'"/>';
+  }
+  var g=pxy(27.45,-83.5),a=pxy(28.75,-80.3);
+  s+='<text x="'+g[0].toFixed(1)+'" y="'+g[1].toFixed(1)+'" font-size="'+(12*k)+'" fill="#6fa3bd" font-style="italic" letter-spacing="'+(1.5*k)+'" text-anchor="middle">Gulf of Mexico</text>';
+  s+='<text x="'+a[0].toFixed(1)+'" y="'+a[1].toFixed(1)+'" font-size="'+(12*k)+'" fill="#6fa3bd" font-style="italic" letter-spacing="'+(1.5*k)+'" text-anchor="end">Atlantic Ocean</text>';
+  if(path&&path.length>1){
+    var sign=1;
+    for(var i=0;i<path.length-1;i++){
+      var p1=px(PLACES[path[i]]),p2=px(PLACES[path[i+1]]);
+      var mx=(p1[0]+p2[0])/2,my=(p1[1]+p2[1])/2,dx=p2[0]-p1[0],dy=p2[1]-p1[1],len=Math.sqrt(dx*dx+dy*dy)||1;
+      var kk=14*k*sign;sign=-sign;
+      s+='<path class="rt" d="M'+p1[0].toFixed(1)+' '+p1[1].toFixed(1)+' Q'+(mx-dy/len*kk).toFixed(1)+' '+(my+dx/len*kk).toFixed(1)+' '+p2[0].toFixed(1)+' '+p2[1].toFixed(1)+'"/>';
+    }
+  }
+  /* label collision */
+  var placed=[];
+  function hit(b){for(var i=0;i<placed.length;i++){var p=placed[i];if(b.x<p.x+p.w&&b.x+b.w>p.x&&b.y<p.y+p.h&&b.y+b.h>p.y)return true}return false}
+  Object.keys(PLACES).forEach(function(key){
+    var p=PLACES[key],c=px(p),w=tw(p.n,11*k),h=12*k;
+    placed.push({x:c[0]-9*k,y:c[1]-9*k,w:18*k,h:18*k});
+    var lx=c[0]+p.dx*k;placed.push({x:p.a==='end'?lx-w:lx,y:c[1]+p.dy*k-10*k,w:w,h:h});
+  });
+  var minPop=z<1.4?60000:z<2.4?25000:z<3.5?9000:2500;
+  var list=(window.GEO?GEO.cities:[]).concat(EXTRA).filter(function(c){return !CITYSKIP[c[0]]}).map(function(c){return {n:c[0],lat:c[1],lon:c[2],pop:c[3]}}).concat(POI.filter(function(m){return z>=m.z}));
+  list.sort(function(a,b){return b.pop-a.pop});
+  var n=0;
+  list.forEach(function(c){
+    if(c.pop&&c.pop<minPop)return;
+    var q=pxy(c.lat,c.lon);
+    if(q[0]<vx0-10||q[0]>vx0+v.vw+10||q[1]<vy0-10||q[1]>vy0+vh+10)return;
+    var big=c.pop>=500000,fs=(big?13:c.pop>=100000?11.5:10)*k,w=tw(c.n,fs),h=fs*1.1;
+    var rx=q[0]+5.5*k,box={x:rx,y:q[1]-h*.8,w:w,h:h},anch='start',tx=rx;
+    if(hit(box)){var lx=q[0]-5.5*k;box={x:lx-w,y:q[1]-h*.8,w:w,h:h};anch='end';tx=lx;if(hit(box))return}
+    placed.push({x:box.x-2*k,y:box.y-1*k,w:box.w+4*k,h:box.h+2*k});
+    s+='<circle class="cdot" cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="'+((big?3.2:2.5)*k).toFixed(2)+'"/><text class="clab" x="'+tx.toFixed(1)+'" y="'+(q[1]+fs*.34).toFixed(1)+'" text-anchor="'+anch+'" font-size="'+fs.toFixed(2)+'" style="stroke-width:'+(3*k).toFixed(2)+'px;font-weight:'+(big?700:500)+'">'+c.n+'</text>';
+  });
+  Object.keys(PLACES).forEach(function(key){
+    var p=PLACES[key],c=px(p),on=path&&path.indexOf(key)>-1,r=(key==='TPA'?9:7)*k;
+    s+='<g class="pin'+(on?' on':'')+(key==='TPA'?' tpa':'')+'" data-k="'+key+'"><circle class="halo" cx="'+c[0].toFixed(1)+'" cy="'+c[1].toFixed(1)+'" r="'+(r+3*k).toFixed(2)+'"/><circle cx="'+c[0].toFixed(1)+'" cy="'+c[1].toFixed(1)+'" r="'+r.toFixed(2)+'"/>'+(key==='TPA'?'<text class="ap" x="'+c[0].toFixed(1)+'" y="'+(c[1]+4*k).toFixed(1)+'" text-anchor="middle" font-size="'+(11*k).toFixed(2)+'">✈</text>':'')+'<text class="pl" x="'+(c[0]+p.dx*k).toFixed(1)+'" y="'+(c[1]+p.dy*k).toFixed(1)+'" text-anchor="'+p.a+'" font-size="'+(11*k).toFixed(2)+'" style="stroke-width:'+(3.5*k).toFixed(2)+'px">'+p.n+'</text></g>';
+  });
+  return s+'</svg><div class="attr">Map data: Natural Earth</div>';
+}
+function renderMap(el){
+  var st=el._st;$('.sv',el).innerHTML=mapSVG(st.path,st.v);
+  $$('.pin',el).forEach(function(g){g.addEventListener('click',function(){
+    if(el._moved)return;
+    var key=g.getAttribute('data-k');
+    var i=DAYS.findIndex(function(d){return d.path.indexOf(key)>-1});
+    if(i>-1){selectDay(i);go('plan');window.scrollTo({top:0,behavior:'smooth'})}
+  })});
+}
+function drawMap(el,path,cap,fitKeys){
+  var fit=fitKeys||path;
+  el._st={path:path,fit:fit,v:fitView(fit)};
+  el.innerHTML=(cap?'<div class="mapcap">'+cap+'</div>':'')+'<div class="zoom"><button data-z="in" aria-label="放大">+</button><button data-z="out" aria-label="缩小">−</button><button data-z="fit" aria-label="复位">⤢</button></div><div class="sv"></div>';
+  renderMap(el);
+  $$('.zoom button',el).forEach(function(b){b.addEventListener('click',function(e){
+    e.stopPropagation();var st=el._st,z=b.dataset.z;
+    if(z==='in')st.v.vw*=0.65;else if(z==='out')st.v.vw/=0.65;else st.v=fitView(st.fit);
+    clampView(st.v);renderMap(el);
+  })});
+  if(!el._bound){
+    el._bound=1;
+    el.addEventListener('pointerdown',function(e){
+      if(e.target.closest('.zoom'))return;
+      var st=el._st,d={x:e.clientX,y:e.clientY,cx:st.v.cx,cy:st.v.cy},sc=st.v.vw/el.clientWidth;
+      el._moved=false;
+      function mv(ev){
+        var dx=ev.clientX-d.x,dy=ev.clientY-d.y;
+        if(Math.abs(dx)+Math.abs(dy)>6)el._moved=true;
+        if(!el._moved)return;
+        st.v.cx=d.cx-dx*sc;st.v.cy=d.cy-dy*sc;clampView(st.v);
+        var s=$('svg',el),vh=st.v.vw*MH/MW;
+        s.setAttribute('viewBox',(st.v.cx-st.v.vw/2).toFixed(1)+' '+(st.v.cy-vh/2).toFixed(1)+' '+st.v.vw.toFixed(1)+' '+vh.toFixed(1));
+      }
+      function up(){window.removeEventListener('pointermove',mv);window.removeEventListener('pointerup',up);window.removeEventListener('pointercancel',up);setTimeout(function(){el._moved=false},60)}
+      window.addEventListener('pointermove',mv);window.addEventListener('pointerup',up);window.addEventListener('pointercancel',up);
+    });
+  }
+}
+
+/* ---------- overview ---------- */
+var CITYSEQ=[['匹兹堡'],['坦帕','d1'],['奥兰多','d1'],['清水湾','d5'],['坦帕','d7'],['匹兹堡','d9']];
+$('#routeChips').innerHTML=CITYSEQ.map(function(c,i){return '<button class="chip'+(i?' arrow':'')+'" data-d="'+(c[1]||'')+'">'+c[0]+'</button>'}).join('');
+$$('#routeChips .chip').forEach(function(b){b.addEventListener('click',function(){
+  var id=b.getAttribute('data-d');if(!id)return;
+  selectDay(DAYS.findIndex(function(d){return d.id===id}));go('plan');
+})});
+drawMap($('#mapOv'),['TPA','ORL','CLW','TPD'],'全程路线',Object.keys(PLACES));
+$('#stays').innerHTML=STAYS.map(function(s){
+  return '<div class="stay"><div class="d">'+s.d+'</div><div style="flex:1;min-width:0"><h4>'+s.n+' <span class="chev" style="color:var(--mute)">▾</span></h4><div class="muted">'+s.a+'</div><div class="more">'+s.t+'<br><button class="copyb" data-c="'+s.a+'">复制地址</button> <a class="copyb" style="text-decoration:none" target="_blank" rel="noopener" href="'+maps(s.n)+'">Apple 地图</a> <a class="copyb" style="text-decoration:none" target="_blank" rel="noopener" href="'+navTo(s.n)+'">导航</a></div></div></div>';
+}).join('');
+$$('.stay').forEach(function(el){el.addEventListener('click',function(e){
+  var c=e.target.closest('.copyb');
+  if(c){if(c.dataset.c){copy(c.dataset.c)}e.stopPropagation();return}
+  el.classList.toggle('open');
+})});
+$('#drives').innerHTML=DRIVES.map(function(d){return '<div class="drive">'+d[0]+'<b>'+d[1]+'</b></div>'}).join('');
+
+/* ---------- plan ---------- */
+var cur=0;
+var todayStr=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York'}).format(new Date());
+$('#dayPills').innerHTML=DAYS.map(function(d,i){
+  var p=d.date.split('-');
+  return '<button class="dp'+(d.date===todayStr?' today':'')+'" data-i="'+i+'"><div class="w">'+d.w+'</div><div class="n">'+(+p[2])+'</div><div class="m">'+(+p[1])+'月</div></button>';
+}).join('');
+$$('.dp').forEach(function(b){b.addEventListener('click',function(){selectDay(+b.dataset.i)})});
+function selectDay(i){
+  cur=i;var d=DAYS[i];
+  $$('.dp').forEach(function(b,j){b.classList.toggle('on',j===i)});
+  var on=$('.dp.on');if(on&&on.scrollIntoView)try{on.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'})}catch(e){}
+  drawMap($('#mapDay'),d.path,'Day '+(i+1)+' 路线');
+  var h='<div class="dayhead"><div class="k">DAY '+(i+1)+' · '+d.date+' · '+d.w+'</div><h3>'+d.title+'</h3><span class="tag-stay">🛏 '+d.stay+'</span><button class="expall" id="expall">全部展开</button></div>';
+  if(d.note)h+='<div class="note">'+d.note+'</div>';
+  if(d.warn)h+='<div class="note warn">⚠️ '+d.warn+'</div>';
+  h+='<div class="tl">'+d.items.map(function(it,k){
+    var links='';
+    if(it.addr)links='<div class="links"><a target="_blank" rel="noopener" href="'+maps(pq(it.addr))+'">Apple 地图</a><a target="_blank" rel="noopener" href="'+navTo(pq(it.addr))+'">导航到这里</a><button data-c="'+it.addr.replace(/"/g,'&quot;')+'">复制地址</button></div>';
+    var body=(it.d||links)?'<div class="desc">'+(it.d||'')+links+'</div>':'';
+    return '<div class="it '+(it.tag||'')+'" data-k="'+k+'"><div class="t">'+it.t+'</div><div class="rail"><i></i></div><div class="body"><div class="ttl"><span>'+it.h+(body?' <span class="chev">▾</span>':'')+'</span>'+(it.tag?badge(it.tag,it.tg):'')+'</div>'+body+'</div></div>';
+  }).join('')+'</div>';
+  var st=[];d.items.forEach(function(it){if(it.addr&&(!st.length||st[st.length-1]!==it.addr))st.push(it.addr)});
+  if(st.length){
+    h+='<div class="card" style="margin-top:14px"><b>当天导航</b><div class="muted" style="margin:2px 0 8px">用 Apple 地图。它一次只能导航一个目的地，所以按每一段分开。</div>';
+    h+='<a class="seglink" target="_blank" rel="noopener" href="'+navTo(pq(st[0]))+'"><i>起</i>当前位置 → '+pq(st[0])+'</a>';
+    for(var q=1;q<st.length;q++)h+='<a class="seglink" target="_blank" rel="noopener" href="'+navTo(pq(st[q]),pq(st[q-1]))+'"><i>'+q+'</i>'+pq(st[q-1])+' → '+pq(st[q])+'</a>';
+    h+='</div>';
+  }
+  $('#dayBody').innerHTML=h;
+  $$('#dayBody .it').forEach(function(el){el.addEventListener('click',function(e){
+    var b=e.target.closest('button[data-c]');if(b){copy(b.dataset.c);e.stopPropagation();return}
+    if(e.target.closest('a'))return;
+    el.classList.toggle('open');
+  })});
+  var all=false;
+  $('#expall').addEventListener('click',function(){all=!all;$$('#dayBody .it').forEach(function(el){el.classList.toggle('open',all)});this.textContent=all?'全部收起':'全部展开'});
+  $('#prev').disabled=i===0;$('#next').disabled=i===DAYS.length-1;
+  store('trip_day',i);
+}
+$('#prev').addEventListener('click',function(){if(cur>0){selectDay(cur-1);window.scrollTo({top:0,behavior:'smooth'})}});
+$('#next').addEventListener('click',function(){if(cur<DAYS.length-1){selectDay(cur+1);window.scrollTo({top:0,behavior:'smooth'})}});
+
+/* ---------- tickets ---------- */
+function drawTickets(f){
+  $('#tkList').innerHTML=TICKETS.filter(function(t){return f==='all'||t.s===f}).map(function(t){
+    return '<div class="card tk '+t.s+'"><div class="h"><div><h4>'+t.h+'</h4><div class="dt">'+t.dt+'</div></div>'+badge(t.s,t.s==='info'?'不用订':null)+'</div><p>'+t.p+'</p></div>';
+  }).join('');
+}
+drawTickets('all');
+$$('.filters .chip').forEach(function(b){b.addEventListener('click',function(){
+  $$('.filters .chip').forEach(function(x){x.classList.remove('on')});b.classList.add('on');drawTickets(b.dataset.f);
+})});
+
+/* ---------- budget ---------- */
+var fare=222.98, bstate=store('trip_budget')||{};
+BUDGET.forEach(function(b){if(bstate[b.id]!==undefined)b.on=bstate[b.id]});
+function drawBudget(){
+  var lo=0,hi=0,booked=0;
+  $('#bList').innerHTML=BUDGET.map(function(b){
+    var l=b.fare?fare*2:b.lo,h=b.fare?fare*2:b.hi;
+    if(b.on){lo+=l;hi+=h;if(b.booked)booked+=l}
+    var amt=l===h?money(l):money(l)+'-'+money(h);
+    return '<div class="bi'+(b.on?' on':'')+'" data-id="'+b.id+'"><div class="sw"></div><div class="nm"><b>'+b.n+'</b><span>'+b.s+'</span></div><div class="amt">'+amt+'</div></div>';
+  }).join('');
+  $('#bt').textContent=lo===hi?money(lo):money(lo)+' - '+money(hi);
+  $('#bsub').textContent='其中已订 '+money(booked)+'，不含酒店房费、租车和餐饮';
+  $('#bbar').style.width=(hi?Math.min(100,booked/hi*100):0)+'%';
+  $$('.bi').forEach(function(el){el.addEventListener('click',function(){
+    var b=BUDGET.find(function(x){return x.id===el.dataset.id});b.on=b.on?0:1;
+    var o={};BUDGET.forEach(function(x){o[x.id]=x.on});store('trip_budget',o);drawBudget();
+  })});
+}
+$$('#fare button').forEach(function(b){b.addEventListener('click',function(){
+  $$('#fare button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');fare=+b.dataset.p;drawBudget();
+})});
+drawBudget();
+
+/* ---------- checklist ---------- */
+var ck=store('trip_check')||{};
+['c_car','c_aq','c_sea','c_fl'].forEach(function(k){if(ck[k]===undefined)ck[k]=true});
+function drawChecks(){
+  function row(a,pre){var id=pre+a[0],d=ck[id];return '<div class="ck'+(d?' done':'')+'" data-id="'+id+'"><div class="box">'+(d?'✓':'')+'</div><div class="tx"><b>'+a[1]+'</b>'+(a[2]?'<span>'+a[2]+'</span>':'')+'</div></div>'}
+  $('#ckList').innerHTML=CHECK.map(function(a){return row(a,'c_')}).join('');
+  $('#packList').innerHTML=PACK.map(function(a){return row(a,'p_')}).join('');
+  $('#remList').innerHTML=REM.map(function(r){return '<div class="ck" style="cursor:default"><div class="tx"><b>'+r[0]+'</b><span style="font-size:13px;color:var(--ink2)">'+r[1]+'</span></div></div>'}).join('');
+  var all=CHECK.length+PACK.length,n=0;CHECK.forEach(function(a){if(ck['c_'+a[0]])n++});PACK.forEach(function(a){if(ck['p_'+a[0]])n++});
+  var pc=Math.round(n/all*100);
+  $('#ring').style.setProperty('--p',pc+'%');$('#ringT').textContent=pc+'%';$('#progT').textContent=n+' / '+all+' 已完成';
+  $$('.ck[data-id]').forEach(function(el){el.addEventListener('click',function(){ck[el.dataset.id]=!ck[el.dataset.id];store('trip_check',ck);drawChecks()})});
+}
+drawChecks();
+
+/* ---------- tabs / routing ---------- */
+function go(v,noHash){
+  $$('.tab').forEach(function(t){t.classList.toggle('on',t.dataset.v===v)});
+  $$('.view').forEach(function(s){s.classList.toggle('on',s.id==='v-'+v)});
+  if(!noHash){try{history.replaceState(null,'','#'+v)}catch(e){try{location.hash=v}catch(_){}}}
+}
+$$('.tab').forEach(function(t){t.addEventListener('click',function(){go(t.dataset.v);window.scrollTo({top:0,behavior:'smooth'})})});
+window.addEventListener('hashchange',function(){var v=location.hash.slice(1);if($('#v-'+v))go(v,true)});
+
+var startDay=DAYS.findIndex(function(d){return d.date===todayStr});
+if(startDay<0){var sd=store('trip_day');startDay=(typeof sd==='number'&&sd>=0&&sd<DAYS.length)?sd:0}
+selectDay(startDay);
+var h0=location.hash.slice(1);if(h0&&$('#v-'+h0))go(h0,true);
+</script>
+</body>
+</html>
